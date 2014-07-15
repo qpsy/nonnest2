@@ -1,0 +1,19 @@
+Package: nonnest2
+Title: Model comparison tests for pairs of non-nested models
+Version: 0.1
+Author: Ed Merkle and Dongjun You
+Maintainer: Dongjun You <dy5x4@mail.missouri.edu>
+Description: Object-oriented testing and comparison of pairs of models,
+    using theory supplied by Vuong (1989).  vuongtest includes
+    tests of model equivalence, along with likelihood ratio-like
+    tests of non-nested models.
+Depends:
+    R (>= 3.0.0)
+Imports:
+    dr,
+    mnormt,
+    sandwich
+License: GPL-2 | GPL-3
+LazyData: yes
+Suggests:
+    testthat
