@@ -101,7 +101,8 @@ icci <- function(object1, object2, conf.level=.95) {
                BIC = list(BIC1=bicA, BIC2=bicB),
                BICci = BICci,
                AIC = list(AIC1=aicA, AIC2=aicB),
-               AICci = AICci)
+               AICci = AICci,
+               confLevel = conf.level)
   class(rval) <- "icci"
   return(rval)
 }
@@ -124,18 +125,20 @@ print.icci <- function(x, ...) {
   cat(" BIC:", formatC(x$BIC$BIC2, digits=3L, format="f"), "\n\n")
 
   if (any(c(x$class$class1, x$class$class2) %in% c("hurdle", "zeroinfl", "mlogit"))) {
-    warning("Currently, BIC cannot be calculated for the objects of
-             hurdle, zeroinfl and mlogit", call.=FALSE)
+    warning("Currently, BIC cannot be calculated for the objects of hurdle, zeroinfl and mlogit.", call.=FALSE)
 
-    cat("Confidence Interval of AIC difference (AICdiff = AIC1 - AIC2) \n")
+    cat(x$confLevel * 100,
+        "% Confidence Interval of AIC difference (AICdiff = AIC1 - AIC2) \n", sep="")
     cat("  ", formatC(x$AICci[1], digits=3L, format="f"), " < ", "AICdiff",
         " < ", formatC(x$AICci[2], digits=3L, format="f"), "\n", sep="")
   } else {
-    cat("Confidence Interval of AIC difference (AICdiff = AIC1 - AIC2) \n")
+    cat(x$confLevel * 100,
+        "% Confidence Interval of AIC difference (AICdiff = AIC1 - AIC2) \n", sep="")
     cat("  ", formatC(x$AICci[1], digits=3L, format="f"), " < ", "AICdiff",
         " < ", formatC(x$AICci[2], digits=3L, format="f"), "\n\n", sep="")
 
-    cat("Confidence Interval of BIC difference (BICdiff = BIC1 - BIC2) \n")
+    cat(x$confLevel * 100,
+        "% Confidence Interval of BIC difference (BICdiff = BIC1 - BIC2) \n", sep="")
     cat("  ", formatC(x$BICci[1], digits=3L, format="f"), " < ", "BICdiff",
         " < ", formatC(x$BICci[2], digits=3L, format="f"), "\n", sep="")
   }
