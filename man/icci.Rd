@@ -3,15 +3,14 @@
 \alias{icci}
 \title{Information Criteria Confidence Intervals}
 \usage{
-icci(object1, object2, alpha = 0.05)
+icci(object1, object2, conf.level = 0.95)
 }
 \arguments{
 \item{object1}{a model object}
 
 \item{object2}{a model object}
 
-\item{alpha}{2-tailed alpha value, for (1-alpha)*100% confidence interval
-             calculation.}
+\item{conf.level}{confidence level of the interval}
 }
 \value{
 an object of class \code{icci} containing test results.
@@ -25,7 +24,8 @@ and lavaan.
 \details{
 Users should take care to ensure that the two models have
 the same dependent variable (or, for lavaan objects, identical
-variables), with observations ordered identically within each model object.
+modeled variables), with observations ordered identically within
+each model object.
 }
 \examples{
 \dontrun{

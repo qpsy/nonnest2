@@ -384,7 +384,10 @@ llcont.rlm <- function (x, ...) {
 ################################################################
 #' @export
 llcont.lavaan <- function(x, ...){
-  ## TODO make sure this is multivariate normal likelihood
+  ## make sure this is multivariate normal likelihood
+  if (x@Options$estimator != "ML"){
+      stop("llcont() only works for lavaan models fit under multivariate normality.")
+  }
   samplestats <- x@SampleStats
   ntab <- unlist(samplestats@nobs)
   llvec <- rep(NA, samplestats@ntotal)

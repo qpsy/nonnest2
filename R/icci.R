@@ -7,12 +7,12 @@
 #'
 #' Users should take care to ensure that the two models have
 #' the same dependent variable (or, for lavaan objects, identical
-#' variables), with observations ordered identically within each model object.
+#' modeled variables), with observations ordered identically within
+#' each model object.
 #'
 #' @param object1 a model object
 #' @param object2 a model object
-#' @param alpha 2-tailed alpha value, for (1-alpha)*100% confidence interval
-#'              calculation.
+#' @param conf.level confidence level of the interval
 #'
 #' @author Ed Merkle and Dongjun You
 #'
@@ -51,7 +51,7 @@
 #' }
 #'
 #' @export
-icci <- function(object1, object2, alpha=.05) {
+icci <- function(object1, object2, conf.level=.95) {
   classA <- class(object1)[1L]
   classB <- class(object2)[1L]
   callA <- if (isS4(object1)) object1@call else object1$call
@@ -89,6 +89,7 @@ icci <- function(object1, object2, alpha=.05) {
 
   bicdiff <- bicA - bicB
   aicdiff <- aicA - aicB
+  alpha <- 1 - conf.level
 
   ## BIC CI
   BICci <- bicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
@@ -126,15 +127,15 @@ print.icci <- function(x, ...) {
     warning("Currently, BIC cannot be calculated for the objects of
              hurdle, zeroinfl and mlogit", call.=FALSE)
 
-    cat("Confidence Interval of AIC difference (AICfiff = AIC1 - AIC2) \n")
+    cat("Confidence Interval of AIC difference (AICdiff = AIC1 - AIC2) \n")
     cat("  ", formatC(x$AICci[1], digits=3L, format="f"), " < ", "AICdiff",
         " < ", formatC(x$AICci[2], digits=3L, format="f"), "\n", sep="")
   } else {
-    cat("Confidence Interval of AIC difference (AICfiff = AIC1 - AIC2) \n")
+    cat("Confidence Interval of AIC difference (AICdiff = AIC1 - AIC2) \n")
     cat("  ", formatC(x$AICci[1], digits=3L, format="f"), " < ", "AICdiff",
         " < ", formatC(x$AICci[2], digits=3L, format="f"), "\n\n", sep="")
 
-    cat("Confidence Interval of BIC difference (BICfiff = BIC1 - BIC2) \n")
+    cat("Confidence Interval of BIC difference (BICdiff = BIC1 - BIC2) \n")
     cat("  ", formatC(x$BICci[1], digits=3L, format="f"), " < ", "BICdiff",
         " < ", formatC(x$BICci[2], digits=3L, format="f"), "\n", sep="")
   }

@@ -7,12 +7,11 @@
 #'
 #' Users should take care to ensure that the two models have
 #' the same dependent variable (or, for lavaan objects, identical
-#' variables), with observations ordered identically within each model object.
+#' modeled variables), with observations ordered identically within
+#' each model object.
 #'
 #' @param object1 a model object
 #' @param object2 a model object
-#' @param alpha 1-tailed alpha value, for (1-2*alpha)*100% confidence interval
-#'              calculation.
 #'
 #' @author Ed Merkle and Dongjun You
 #'
@@ -63,7 +62,7 @@
 #' @importFrom sandwich estfun
 #' @importFrom dr dr.pvalue
 #' @export
-vuongtest <- function(object1, object2, alpha=.05) {
+vuongtest <- function(object1, object2) {
   classA <- class(object1)[1L]
   classB <- class(object2)[1L]
   callA <- if (isS4(object1)) object1@call else object1$call

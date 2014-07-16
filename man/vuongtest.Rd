@@ -5,15 +5,12 @@
 \alias{vuongtest-package}
 \title{vuongtest.}
 \usage{
-vuongtest(object1, object2, alpha = 0.05)
+vuongtest(object1, object2)
 }
 \arguments{
 \item{object1}{a model object}
 
 \item{object2}{a model object}
-
-\item{alpha}{1-tailed alpha value, for (1-2*alpha)*100% confidence interval
-             calculation.}
 }
 \value{
 an object of class \code{vuongtest} containing test results.
@@ -29,7 +26,8 @@ and lavaan.
 \details{
 Users should take care to ensure that the two models have
 the same dependent variable (or, for lavaan objects, identical
-variables), with observations ordered identically within each model object.
+modeled variables), with observations ordered identically within
+each model object.
 }
 \examples{
 \dontrun{
