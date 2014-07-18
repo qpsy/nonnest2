@@ -56,7 +56,7 @@
 #'               speed   =~ x7 + x8 + x9 '
 #' fit1 <- cfa(HS.model, data=HolzingerSwineford1939)
 #' fit2 <- cfa(HS.model, data=HolzingerSwineford1939, group="school")
-#' vuongtest(fit1, fit2, 0.05)
+#' vuongtest(fit1, fit2)
 #' }
 #'
 #' @importFrom sandwich estfun
@@ -160,10 +160,10 @@ print.vuongtest <- function(x, ...) {
 
   cat("\nModel 1 \n")
   cat(" Class:", x$class$class1, "\n")
-  cat(" Call:", deparse(x$call$call1), "\n")
+  cat(" Call:", deparse(x$call$call1), "\n", fill=TRUE)
   cat("Model 2 \n")
   cat(" Class:", x$class$class2, "\n")
-  cat(" Call:", deparse(x$call$call2), "\n\n")
+  cat(" Call:", deparse(x$call$call2), "\n\n", fill=TRUE)
 
   cat("Variance test \n")
   cat("  H0: Model 1 and Model 2 are equivalent for the focal population", "\n")
