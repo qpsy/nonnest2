@@ -156,14 +156,12 @@ calcLambda <- function(object1, object2, n) {
 #' @method print vuongtest
 #' @export
 print.vuongtest <- function(x, ...) {
-  #cat("\n  Vuong test \n\n")
-
   cat("\nModel 1 \n")
   cat(" Class:", x$class$class1, "\n")
-  cat(" Call:", deparse(x$call$call1), "\n", fill=TRUE)
+  #cat(" Call:", deparse(x$call$call1), "\n", fill=TRUE)
   cat("Model 2 \n")
-  cat(" Class:", x$class$class2, "\n")
-  cat(" Call:", deparse(x$call$call2), "\n\n", fill=TRUE)
+  cat(" Class:", x$class$class2, "\n\n")
+  #cat(" Call:", deparse(x$call$call2), "\n\n", fill=TRUE)
 
   cat("Variance test \n")
   cat("  H0: Model 1 and Model 2 are equivalent for the focal population", "\n")

@@ -115,17 +115,17 @@ icci <- function(object1, object2, conf.level=.95) {
 print.icci <- function(x, ...) {
   cat("\nModel 1 \n")
   cat(" Class:", x$class$class1, "\n")
-  cat(" Call:", deparse(x$call$call1), "\n")
+  #cat(" Call:", deparse(x$call$call1), fill=TRUE)
   cat(" AIC:", formatC(x$AIC$AIC1, digits=3L, format="f"), "\n")
   cat(" BIC:", formatC(x$BIC$BIC1, digits=3L, format="f"), "\n")
   cat("Model 2 \n")
   cat(" Class:", x$class$class2, "\n")
-  cat(" Call:", deparse(x$call$call2), "\n")
+  #cat(" Call:", deparse(x$call$call2), "\n", fill=TRUE)
   cat(" AIC:", formatC(x$AIC$AIC2, digits=3L, format="f"), "\n")
   cat(" BIC:", formatC(x$BIC$BIC2, digits=3L, format="f"), "\n\n")
 
   if (any(c(x$class$class1, x$class$class2) %in% c("hurdle", "zeroinfl", "mlogit"))) {
-    warning("Currently, BIC cannot be calculated for the objects of hurdle, zeroinfl and mlogit.", call.=FALSE)
+    warning("\n Currently, BIC cannot be calculated for the objects of hurdle, zeroinfl and mlogit.", call.=FALSE)
 
     cat(x$confLevel * 100,
         "% Confidence Interval of AIC difference (AICdiff = AIC1 - AIC2) \n", sep="")
