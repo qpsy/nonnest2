@@ -1,6 +1,6 @@
 #' Individual Log-Likelihoods
 #'
-#' \code{llcont} returns the individual log-likelihood values
+#' \code{llcont} returns log-likelihood values associated with individual observations, evaluated at the ML estimates.
 #'
 #' This is a s3 generic function:
 #' Currently, the method is defined for lm, glm, glm.nb, clm, hurdle,
@@ -9,7 +9,7 @@
 #' @param x a returned object from the function for the object
 #' @param \dots arguments passed to methods
 #'
-#' @return Individual log-likelihoods that are inputs of vuongtest
+#' @return An object of class numeric containing individuals' contributions to the log-likelihood.  The sum of these contributions equals the model log-likelihood.
 #'
 #' @examples
 #' ## Gamma
@@ -20,7 +20,7 @@
 #' sum(llcont(gam1))
 #' logLik(gam1)
 #'
-#' @importFrom mnormt dmnorm
+#' @importFrom mvtnorm dmvnorm
 #' @export
 llcont <- function(x, ...) UseMethod("llcont")
 
@@ -411,7 +411,7 @@ llcont.lavaan <- function(x, ...){
         ## set mean structure to sample estimates
         Mu.hat <- apply(x@Data@X[[g]], 2, mean)
       }
-      llvec[grpind] <- dmnorm(x@Data@X[[g]], Mu.hat, Sigma.hat, log=TRUE)
+      llvec[grpind] <- dmvnorm(x@Data@X[[g]], Mu.hat, Sigma.hat, log=TRUE)
     } else { # incomplete data
       nsub <- ntab[g]
       M <- samplestats@missing[[g]]
@@ -427,7 +427,7 @@ llcont.lavaan <- function(x, ...){
         X <- M[[p]][["X"]]
         var.idx <- M[[p]][["var.idx"]]
 
-        tmpll[pat.idx==p] <- dmnorm(X, Mu.hat[var.idx], Sigma.hat[var.idx, var.idx], log=TRUE)
+        tmpll[pat.idx==p] <- dmvnorm(X, Mu.hat[var.idx], Sigma.hat[var.idx, var.idx], log=TRUE)
       }
 
       llvec[grpind] <- tmpll

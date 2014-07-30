@@ -11,8 +11,8 @@ Description: Object-oriented testing and comparison of pairs of models,
 Depends:
     R (>= 3.0.0)
 Imports:
-    dr,
-    mnormt,
+    CompQuadForm,
+    mvtnorm,
     sandwich
 License: GPL-2 | GPL-3
 LazyData: yes

@@ -29,17 +29,17 @@
 #' house1 <- glm(Freq ~ Infl + Type + Cont, family=poisson, data=housing)
 #' house2 <- glm(Freq ~ Infl + Sat, family=poisson, data=housing)
 #' house3 <- glm(Freq ~ Infl, family=poisson, data=housing)
-#' ## house3 is neted in house1 and house2
+#' ## house3 is nested within house1 and house2
 #' anova(house3, house1, test="Chisq")
 #' anova(house2, house1, test="Chisq")
 #'
-#' ## house 2 is not nested in house1, so the test will not be interpreted
+#' ## house 2 is not nested in house1, so this test is invalid
 #' anova(house2, house1, test="Chisq")
 #'
-#' ## vuongtest can be carried on
+#' ## Use vuongtest() instead
 #' vuongtest(house2, house1)
 #'
-#' ## vuongtest can be applied to models with different distribution assumptions
+#' ## Application to models with different distributional assumptions
 #' require(pscl)
 #' bio1 <- glm(art ~ fem + mar + phd + ment, family=poisson, data=bioChemists)
 #' bio2 <- hurdle(art ~ fem + mar + phd + ment, data=bioChemists)
@@ -50,6 +50,7 @@
 #' vuongtest(bio1, bio3)
 #' vuongtest(bio3, bio2)
 
+#' ## Application to latent variable models
 #' require(lavaan)
 #' HS.model <- 'visual  =~ x1 + x2 + x3
 #'               textual =~ x4 + x5 + x6
@@ -60,7 +61,7 @@
 #' }
 #'
 #' @importFrom sandwich estfun
-#' @importFrom dr dr.pvalue
+#' @importFrom CompQuadForm imhof
 #' @export
 vuongtest <- function(object1, object2) {
   classA <- class(object1)[1L]
@@ -78,11 +79,11 @@ vuongtest <- function(object1, object2) {
   ## Get p-value of weighted chi-square dist
   ## Need to install the dr package
   lamstar2 <- calcLambda(object1, object2, n)
-  tmp <- dr.pvalue(lamstar2, n * omega.hat.2)
-  pOmega <- tmp[[4]]
+  ## tmp <- dr.pvalue(lamstar2, n * omega.hat.2)
+  ## pOmega <- tmp[[4]]
   ## Alternative:
   ## library(CompQuadForm)
-  #pOmega <- imhof(n * omega.hat.2, lamstar2)[[1]]
+  pOmega <- imhof(n * omega.hat.2, lamstar2)[[1]]
 
   ## Calculate and test LRT; Eq (6.4)
   lr <- sum(llA - llB)

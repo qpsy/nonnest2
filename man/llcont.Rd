@@ -11,10 +11,10 @@ llcont(x, ...)
 \item{\dots}{arguments passed to methods}
 }
 \value{
-Individual log-likelihoods that are inputs of vuongtest
+An object of class numeric containing individuals' contributions to the log-likelihood.  The sum of these contributions equals the model log-likelihood.
 }
 \description{
-\code{llcont} returns the individual log-likelihood values
+\code{llcont} returns log-likelihood values associated with individual observations, evaluated at the ML estimates.
 }
 \details{
 This is a s3 generic function:

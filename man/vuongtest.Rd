@@ -35,17 +35,17 @@ require(MASS)
 house1 <- glm(Freq ~ Infl + Type + Cont, family=poisson, data=housing)
 house2 <- glm(Freq ~ Infl + Sat, family=poisson, data=housing)
 house3 <- glm(Freq ~ Infl, family=poisson, data=housing)
-## house3 is neted in house1 and house2
+## house3 is nested within house1 and house2
 anova(house3, house1, test="Chisq")
 anova(house2, house1, test="Chisq")
 
-## house 2 is not nested in house1, so the test will not be interpreted
+## house 2 is not nested in house1, so this test is invalid
 anova(house2, house1, test="Chisq")
 
-## vuongtest can be carried on
+## Use vuongtest() instead
 vuongtest(house2, house1)
 
-## vuongtest can be applied to models with different distribution assumptions
+## Application to models with different distributional assumptions
 require(pscl)
 bio1 <- glm(art ~ fem + mar + phd + ment, family=poisson, data=bioChemists)
 bio2 <- hurdle(art ~ fem + mar + phd + ment, data=bioChemists)
@@ -55,13 +55,14 @@ vuongtest(bio3, bio1)
 vuongtest(bio1, bio2)
 vuongtest(bio1, bio3)
 vuongtest(bio3, bio2)
+## Application to latent variable models
 require(lavaan)
 HS.model <- 'visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
               speed   =~ x7 + x8 + x9 '
 fit1 <- cfa(HS.model, data=HolzingerSwineford1939)
 fit2 <- cfa(HS.model, data=HolzingerSwineford1939, group="school")
-vuongtest(fit1, fit2, 0.05)
+vuongtest(fit1, fit2)
 }
 }
 \author{
