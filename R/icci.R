@@ -60,6 +60,12 @@ icci <- function(object1, object2, conf.level=.95) {
   llA <- llcont(object1)
   llB <- llcont(object2)
 
+  if (!isTRUE(all.equal(sum(llA), logLik(object1))))
+    stop("The individual log-likelihoods do not sum up to the log-likelihood. Please report your model and object to the maintainer.")
+
+  if (!isTRUE(all.equal(sum(llB), logLik(object2))))
+    stop("The individual log-likelihoods do not sum up to the log-likelihood. Please report your model and object to the maintainer.")
+
   ## Eq (4.2)
   n <- NROW(llA)
   omega.hat.2 <- (n-1)/n * var(llA - llB)
@@ -115,12 +121,12 @@ icci <- function(object1, object2, conf.level=.95) {
 print.icci <- function(x, ...) {
   cat("\nModel 1 \n")
   cat(" Class:", x$class$class1, "\n")
-  #cat(" Call:", deparse(x$call$call1), fill=TRUE)
+  cat(" Call:", deparse(x$call$call1), fill=TRUE)
   cat(" AIC:", formatC(x$AIC$AIC1, digits=3L, format="f"), "\n")
   cat(" BIC:", formatC(x$BIC$BIC1, digits=3L, format="f"), "\n")
   cat("Model 2 \n")
   cat(" Class:", x$class$class2, "\n")
-  #cat(" Call:", deparse(x$call$call2), "\n", fill=TRUE)
+  cat(" Call:", deparse(x$call$call2), "\n", fill=TRUE)
   cat(" AIC:", formatC(x$AIC$AIC2, digits=3L, format="f"), "\n")
   cat(" BIC:", formatC(x$BIC$BIC2, digits=3L, format="f"), "\n\n")
 

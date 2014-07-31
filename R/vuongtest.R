@@ -72,6 +72,12 @@ vuongtest <- function(object1, object2) {
   llA <- llcont(object1)
   llB <- llcont(object2)
 
+  if (!isTRUE(all.equal(sum(llA), logLik(object1))))
+    stop("The individual log-likelihoods do not sum up to the log-likelihood. Please report your model and object to the maintainer.")
+
+  if (!isTRUE(all.equal(sum(llB), logLik(object2))))
+    stop("The individual log-likelihoods do not sum up to the log-likelihood. Please report your model and object to the maintainer.")
+
   ## Eq (4.2)
   n <- NROW(llA)
   omega.hat.2 <- (n-1)/n * var(llA - llB)
@@ -159,10 +165,10 @@ calcLambda <- function(object1, object2, n) {
 print.vuongtest <- function(x, ...) {
   cat("\nModel 1 \n")
   cat(" Class:", x$class$class1, "\n")
-  #cat(" Call:", deparse(x$call$call1), "\n", fill=TRUE)
+  cat(" Call:", deparse(x$call$call1), "\n", fill=TRUE)
   cat("Model 2 \n")
   cat(" Class:", x$class$class2, "\n\n")
-  #cat(" Call:", deparse(x$call$call2), "\n\n", fill=TRUE)
+  cat(" Call:", deparse(x$call$call2), "\n\n", fill=TRUE)
 
   cat("Variance test \n")
   cat("  H0: Model 1 and Model 2 are equivalent for the focal population", "\n")
