@@ -1,10 +1,9 @@
 Package: nonnest2
 Title: Tests of non-nested models
-Version: 0.1
+Version: 0.1.1-1
 Author: Ed Merkle and Dongjun You
 Maintainer: Dongjun You <dy5x4@mail.missouri.edu>
-Description: Object-oriented testing and comparison of pairs of models,
-    using theory supplied by Vuong (1989).  vuongtest includes
+Description: This package includes
     tests of model equivalence, likelihood ratio-like
     tests of non-nested models, and confidence intervals associated with
     information criteria.
