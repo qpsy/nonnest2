@@ -16,16 +16,18 @@ icci(object1, object2, conf.level = 0.95)
 an object of class \code{icci} containing test results.
 }
 \description{
-\code{icci} calculates confidence intervals of BIC.
-Functionality is available for models of classes
-lm, glm, glm.nb, clm, hurdle, zeroinfl, mlogit, nls, polr, rlm,
-and lavaan.
+Calculate confidence intervals of BIC.
 }
 \details{
+Functionality is currently available for models of classes
+\code{lm}, \code{glm}, \code{glm.nb}, \code{clm}, \code{hurdle}, \code{zeroinfl}, \code{mlogit}, \code{nls}, \code{polr}, \code{rlm}, and \code{lavaan}.
+
 Users should take care to ensure that the two models have
 the same dependent variable (or, for lavaan objects, identical
 modeled variables), with observations ordered identically within
-each model object.
+each model object.  Assuming the same data matrix is used to fit each model,
+observation ordering should generally be identical.  There are currently
+no checks for this, however.
 }
 \examples{
 \dontrun{

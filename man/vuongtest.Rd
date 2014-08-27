@@ -14,16 +14,21 @@ vuongtest(object1, object2)
 an object of class \code{vuongtest} containing test results.
 }
 \description{
-\code{vuongtest} formally tests pairs of models using theory provided
-by Vuong (1989).  Functionality is available for models of classes
-lm, glm, glm.nb, clm, hurdle, zeroinfl, mlogit, nls, polr, rlm,
-and lavaan.
+Test pairs of non-nested models using Vuong's (1989) theory.  This includes
+a test of model distinguishability and a test of model fit.
 }
 \details{
+For non-nested models, the test of distinguishability indicates whether or
+not the models can possibly be distinguished on the basis of the observed
+data.  The LRT then indicates whether or not one model fits better
+than another.
+
 Users should take care to ensure that the two models have
 the same dependent variable (or, for lavaan objects, identical
 modeled variables), with observations ordered identically within
-each model object.
+each model object.  Assuming the same data matrix is used to fit each model,
+observation ordering should generally be identical.  There are currently
+no checks for this, however.
 }
 \examples{
 \dontrun{
