@@ -7,7 +7,7 @@
 #' not the models can possibly be distinguished on the basis of the observed
 #' data.  The LRT then indicates whether or not one model fits better
 #' than another.
-#' 
+#'
 #' Users should take care to ensure that the two models have
 #' the same dependent variable (or, for lavaan objects, identical
 #' modeled variables), with observations ordered identically within
@@ -193,6 +193,6 @@ print.vuongtest <- function(x, ...) {
 
 
 .onAttach <- function(...) {
-  packageStartupMessage("  This is nonnest2 0.1.1-1
+  packageStartupMessage("  This is nonnest2 0.1-1
   nonnest2 is BETA software! Please report any bugs.")
 }
