@@ -16,4 +16,9 @@ Imports:
 License: GPL-2 | GPL-3
 LazyData: yes
 Suggests:
-    testthat
+    testthat,
+    MASS,
+    ordinal,
+    pscl,
+    mlogit,
+    lavaan
