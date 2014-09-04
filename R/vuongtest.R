@@ -31,6 +31,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' ## Count regression comparisons
 #' require(MASS)
 #' house1 <- glm(Freq ~ Infl + Type + Cont, family=poisson, data=housing)
 #' house2 <- glm(Freq ~ Infl + Sat, family=poisson, data=housing)

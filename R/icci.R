@@ -28,6 +28,7 @@
 #'
 #' @examples
 #' \dontrun{
+#' ## Count regression comparisons
 #' require(MASS)
 #' house1 <- glm(Freq ~ Infl + Type + Cont, family=poisson, data=housing)
 #' house2 <- glm(Freq ~ Infl + Sat, family=poisson, data=housing)
@@ -35,6 +36,7 @@
 #' ## CI for BIC
 #' icci(house2, house1)
 #'
+#' ## Further comparisons to hurdle, zero-inflated models
 #' require(pscl)
 #' bio1 <- glm(art ~ fem + mar + phd + ment, family=poisson, data=bioChemists)
 #' bio2 <- hurdle(art ~ fem + mar + phd + ment, data=bioChemists)
@@ -42,7 +44,8 @@
 #' icci(bio2, bio1)
 #' icci(bio3, bio1)
 #' icci(bio3, bio2)
-
+#'
+#' ## Latent variable model comparisons
 #' require(lavaan)
 #' HS.model <- 'visual  =~ x1 + x2 + x3
 #'               textual =~ x4 + x5 + x6
