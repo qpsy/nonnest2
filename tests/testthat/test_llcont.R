@@ -154,7 +154,7 @@ test_that("lm object", {
 
 
 test_that("mlogit object", {
-  if (isTRUE(require("mlogit"))) {
+  if (isTRUE(require("mlogit")) & isTRUE(require("AER"))) {
     data("Fishing", package = "mlogit")
     Fish <- mlogit.data(Fishing, varying = c(2:9), shape = "wide",
                         choice = "mode")
@@ -254,14 +254,19 @@ test_that("nls object", {
   x <- -(1:100)/10
   y <- 100 + 10 * exp(x / 2) + rnorm(x)/10
   nls8 <- suppressWarnings(nls(y ~  Const + A * exp(B * x)))
-  utils::data(muscle, package = "MASS")
-  nls9 <- nls(Length ~ cbind(1, exp(-Conc/th)), muscle,
-              start = list(th = 1), algorithm = "plinear")
-  b <- coef(nls9)
-  nls10 <- nls(Length ~ a[Strip] + b[Strip]*exp(-Conc/th), muscle,
-               start = list(a = rep(b[2], 21), b = rep(b[3], 21),
-                   th = b[1]))
+  if(isTRUE(require("MASS"))){
+      utils::data(muscle, package = "MASS")
+      nls9 <- nls(Length ~ cbind(1, exp(-Conc/th)), muscle,
+                  start = list(th = 1), algorithm = "plinear")
+      b <- coef(nls9)
+      nls10 <- nls(Length ~ a[Strip] + b[Strip]*exp(-Conc/th), muscle,
+                   start = list(a = rep(b[2], 21), b = rep(b[3], 21),
+                       th = b[1]))
 
+      expect_that(sum(llcont(nls9)), equals(as.numeric(logLik(nls9))))
+      expect_that(sum(llcont(nls10)), equals(as.numeric(logLik(nls10))))
+  }
+      
   expect_that(sum(llcont(nls1)), equals(as.numeric(logLik(nls1))))
   expect_that(sum(llcont(nls2)), equals(as.numeric(logLik(nls2))))
   expect_that(sum(llcont(nls3)), equals(as.numeric(logLik(nls3))))
@@ -270,8 +275,7 @@ test_that("nls object", {
   expect_that(sum(llcont(nls6)), equals(as.numeric(logLik(nls6))))
   expect_that(sum(llcont(nls7)), equals(as.numeric(logLik(nls7))))
   expect_that(sum(llcont(nls8)), equals(as.numeric(logLik(nls8))))
-  expect_that(sum(llcont(nls9)), equals(as.numeric(logLik(nls9))))
-  expect_that(sum(llcont(nls10)), equals(as.numeric(logLik(nls10))))
+
 })
 
 
