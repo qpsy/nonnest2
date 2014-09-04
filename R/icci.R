@@ -1,6 +1,6 @@
 #' Information Criteria Confidence Intervals
 #'
-#' Calculate confidence intervals of BIC.
+#' Calculate confidence intervals of AIC and BIC.
 #'
 #' Functionality is currently available for models of classes
 #' \code{lm}, \code{glm}, \code{glm.nb}, \code{clm}, \code{hurdle}, \code{zeroinfl}, \code{mlogit}, \code{nls}, \code{polr}, \code{rlm}, and \code{lavaan}.
