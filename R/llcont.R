@@ -3,7 +3,7 @@
 #' Obtain log-likelihood values associated with individual observations, evaluated at the ML estimates.
 #'
 #' This is a S3 generic function.
-#' Currently, the method is defined for \code{lm}, \code{glm}, \code{glm.nb}, \
+#' Currently, the method is defined for \code{lm}, \code{glm}, \code{glm.nb},
 #' \code{clm}, \code{hurdle}, \code{zeroinfl}, \code{mlogit}, \code{nls},
 #' \code{polr}, \code{rlm}, and \code{lavaan} objects.
 #'

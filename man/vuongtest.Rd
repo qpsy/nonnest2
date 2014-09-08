@@ -57,6 +57,7 @@ vuongtest(bio3, bio1)
 vuongtest(bio1, bio2)
 vuongtest(bio1, bio3)
 vuongtest(bio3, bio2)
+
 ## Application to latent variable models
 require(lavaan)
 HS.model <- 'visual  =~ x1 + x2 + x3
