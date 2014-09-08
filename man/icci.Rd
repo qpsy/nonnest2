@@ -16,7 +16,7 @@ icci(object1, object2, conf.level = 0.95)
 an object of class \code{icci} containing test results.
 }
 \description{
-Calculate confidence intervals of BIC.
+Calculate confidence intervals of AIC and BIC.
 }
 \details{
 Functionality is currently available for models of classes
