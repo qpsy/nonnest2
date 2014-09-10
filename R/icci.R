@@ -4,7 +4,7 @@
 #'
 #' Functionality is currently available for models of classes
 #' \code{lm}, \code{glm}, \code{glm.nb}, \code{clm}, \code{hurdle}, \code{zeroinfl}, \code{mlogit}, \code{nls}, \code{polr}, \code{rlm}, and \code{lavaan}.
-#' 
+#'
 #' Users should take care to ensure that the two models have
 #' the same dependent variable (or, for lavaan objects, identical
 #' modeled variables), with observations ordered identically within
@@ -52,7 +52,7 @@
 #'               speed   =~ x7 + x8 + x9 '
 #' fit1 <- cfa(HS.model, data=HolzingerSwineford1939)
 #' fit2 <- cfa(HS.model, data=HolzingerSwineford1939, group="school")
-#' icci(fit1, fit2, 0.05)
+#' icci(fit1, fit2)
 #' }
 #'
 #' @export

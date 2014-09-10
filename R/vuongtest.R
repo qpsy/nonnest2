@@ -194,6 +194,6 @@ print.vuongtest <- function(x, ...) {
 
 
 .onAttach <- function(...) {
-  packageStartupMessage("  This is nonnest2 0.1-2
+  packageStartupMessage("  This is nonnest2 0.1-1
   nonnest2 is BETA software! Please report any bugs.")
 }

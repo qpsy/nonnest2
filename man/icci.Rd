@@ -55,7 +55,7 @@ HS.model <- 'visual  =~ x1 + x2 + x3
               speed   =~ x7 + x8 + x9 '
 fit1 <- cfa(HS.model, data=HolzingerSwineford1939)
 fit2 <- cfa(HS.model, data=HolzingerSwineford1939, group="school")
-icci(fit1, fit2, 0.05)
+icci(fit1, fit2)
 }
 }
 \author{
