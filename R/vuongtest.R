@@ -99,12 +99,11 @@ vuongtest <- function(object1, object2, nested=FALSE) {
   omega.hat.2 <- (n-1)/n * var(llA - llB)
 
   ## Get p-value of weighted chi-square dist
-  ## Need to install the dr package
   lamstar <- calcLambda(object1, object2, n)
+  ## Note: dr package requires non-negative weights, which
+  ##       does not help when nested==TRUE
   ## tmp <- dr.pvalue(lamstar2, n * omega.hat.2)
   ## pOmega <- tmp[[4]]
-  ## Alternative:
-  ## library(CompQuadForm)
   pOmega <- imhof(n * omega.hat.2, lamstar^2)[[1]]
 
   ## Calculate and test LRT; Eq (6.4)
@@ -114,7 +113,20 @@ vuongtest <- function(object1, object2, nested=FALSE) {
   ## Null distribution and test stat depend on nested
   if(nested){
       teststat <- 2 * lr
-      pLRTA <- imhof(teststat, lamstar)[[1]]
+      ## lamstar is negative due to the ordering of objects in calcLambda();
+      ## we could get the same thing via calcLambda(object2, object1, n)
+      pLRTA <- imhof(teststat, -lamstar)[[1]]
+
+      ## Compare different approximations
+      ## Empirical
+      ## tmp <- matrix(rchisq(1000 * length(lamstar), 1), 1000, length(lamstar))
+      ## edist <- apply(tmp, 1, function(x) sum(lamstar*x))
+      ## print(summary(edist))
+      ## imhof without negative weights
+      ## print(imhof(teststat, lamstar)[[1]])
+      ## davies without negative weights
+      ## print(davies(teststat, lamstar)$Qq)
+      
       pLRTB <- NA
   } else {
       ## Two 1-tailed p-values from a normal:
