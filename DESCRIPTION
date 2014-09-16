@@ -1,6 +1,6 @@
 Package: nonnest2
 Title: Tests of non-nested models
-Version: 0.1-1
+Version: 0.2
 Author: Ed Merkle and Dongjun You
 Maintainer: Dongjun You <dy5x4@mail.missouri.edu>
 Description: Testing non-nested models via theory supplied by Vuong (1989).

@@ -18,6 +18,7 @@
 #'
 #' @param object1 a model object
 #' @param object2 a model object
+#' @param nested if \code{TRUE}, models are assumed to be nested
 #'
 #' @author Ed Merkle and Dongjun You
 #'
@@ -38,7 +39,7 @@
 #' house3 <- glm(Freq ~ Infl, family=poisson, data=housing)
 #' ## house3 is nested within house1 and house2
 #' anova(house3, house1, test="Chisq")
-#' anova(house2, house1, test="Chisq")
+#' anova(house3, house2, test="Chisq")
 #'
 #' ## house 2 is not nested in house1, so this test is invalid
 #' anova(house2, house1, test="Chisq")
@@ -70,7 +71,7 @@
 #' @importFrom sandwich estfun
 #' @importFrom CompQuadForm imhof
 #' @export
-vuongtest <- function(object1, object2) {
+vuongtest <- function(object1, object2, nested=FALSE) {
   classA <- class(object1)[1L]
   classB <- class(object2)[1L]
   callA <- if (isS4(object1)) object1@call else object1$call
@@ -79,11 +80,19 @@ vuongtest <- function(object1, object2) {
   llA <- llcont(object1)
   llB <- llcont(object2)
 
-  ## if (!isTRUE(all.equal(sum(llA), as.numeric(logLik(object1)))))
-  ##   stop("The individual log-likelihoods do not sum up to the log-likelihood. Please report your model and object to the maintainer.")
-
-  ## if (!isTRUE(all.equal(sum(llB), as.numeric(logLik(object2)))))
-  ##   stop("The individual log-likelihoods do not sum up to the log-likelihood. Please report your model and object to the maintainer.")
+  ## If nested==TRUE, decide which is the full model by seeing
+  ## which has the larger log-likelihood.  From here on,
+  ## object1 is the full model
+  if(nested){
+      if(sum(llB) > sum(llA)){
+          tmp <- object1
+          object1 <- object2
+          object2 <- tmp
+          tmp <- llA
+          llA <- llB
+          llB <- tmp
+      }
+  }
 
   ## Eq (4.2)
   n <- NROW(llA)
@@ -91,34 +100,34 @@ vuongtest <- function(object1, object2) {
 
   ## Get p-value of weighted chi-square dist
   ## Need to install the dr package
-  lamstar2 <- calcLambda(object1, object2, n)
+  lamstar <- calcLambda(object1, object2, n)
   ## tmp <- dr.pvalue(lamstar2, n * omega.hat.2)
   ## pOmega <- tmp[[4]]
   ## Alternative:
   ## library(CompQuadForm)
-  pOmega <- imhof(n * omega.hat.2, lamstar2)[[1]]
+  pOmega <- imhof(n * omega.hat.2, lamstar^2)[[1]]
 
   ## Calculate and test LRT; Eq (6.4)
   lr <- sum(llA - llB)
   teststat <- (1/sqrt(n)) * lr/sqrt(omega.hat.2)
 
-  ## Two 1-tailed p-values:
-  pLRTA <- pnorm(teststat, lower.tail=FALSE)
-  pLRTB <- pnorm(teststat)
-
-  ## Interval for BIC differences
-  #bicA <- BIC(object1)
-  #bicB <- BIC(object2)
-  #bicdiff <- bicA - bicB
-
-  ## BIC CI
-  #ci <- bicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
+  ## Null distribution and test stat depend on nested
+  if(nested){
+      teststat <- 2 * lr
+      pLRTA <- imhof(teststat, lamstar)[[1]]
+      pLRTB <- NA
+  } else {
+      ## Two 1-tailed p-values from a normal:
+      pLRTA <- pnorm(teststat, lower.tail=FALSE)
+      pLRTB <- pnorm(teststat)
+  }
 
   rval <- list(omega = omega.hat.2, p_omega = pOmega,
-               z_LRT = teststat,
+               LRTstat = teststat,
                p_LRT = list(A=pLRTA, B=pLRTB),
                class = list(class1=classA, class2=classB),
-               call = list(call1=callA, call2=callB))#, BICCI=ci)
+               call = list(call1=callA, call2=callB),
+               nested = nested)
   class(rval) <- "vuongtest"
   return(rval)
 }
@@ -160,8 +169,8 @@ calcLambda <- function(object1, object2, n) {
 
   lamstar <- eigen(W, only.values=TRUE)$values
   ## Discard imaginary part, as it only occurs for tiny eigenvalues?
-  ## using Mod
-  Mod(lamstar)^2
+  ## using Re
+  Re(lamstar)
 }
 
 ################################################################
@@ -178,22 +187,31 @@ print.vuongtest <- function(x, ...) {
   cat(" Call:", deparse(x$call$call2), "\n\n", fill=TRUE)
 
   cat("Variance test \n")
-  cat("  H0: Model 1 and Model 2 are equivalent for the focal population", "\n")
+  cat("  H0: Model 1 and Model 2 are indistinguishable", "\n")
+  cat("  H1: Model 1 and Model 2 are distinguishable", "\n")
   cat("  w2 = ", formatC(x$omega, digits=3L, format="f"), ",   ",
       "p = ", format.pval(x$p_omega, digits=3L), "\n\n", sep="")
 
-  cat("Non-nested likelihood ratio test \n")
-  cat("  H0: Model fits are equal for the focal population \n")
-  cat("  H1A: Model 1 fits better than Model 2 \n")
-  cat("  z = ", formatC(x$z_LRT, digits=3L, format="f"), ",   ",
-      "p = ", format.pval(x$p_LRT[[1]], digits=3L), "\n", sep="")
-  cat("  H1B: Model 2 fits better than Model 1 \n")
-  cat("  z = ", formatC(x$z_LRT, digits=3L, format="f"), ",   ",
-      "p = ", format.pval(x$p_LRT[[2]], digits=4L), "\n", sep="")
+  if(x$nested){
+      cat("Robust likelihood ratio test of distinguishable models \n")
+      cat("  H0: Model 2 fits as well as Model 1 \n")
+      cat("  H1: Model 1 fits better than Model 2 \n")
+      cat("  LR = ", formatC(x$LRTstat, digits=3L, format="f"), ",   ",
+          "p = ", format.pval(x$p_LRT[[1]], digits=3L), "\n", sep="")
+  } else {      
+      cat("Non-nested likelihood ratio test \n")
+      cat("  H0: Model fits are equal for the focal population \n")
+      cat("  H1A: Model 1 fits better than Model 2 \n")
+      cat("  z = ", formatC(x$LRTstat, digits=3L, format="f"), ",   ",
+          "p = ", format.pval(x$p_LRT[[1]], digits=3L), "\n", sep="")
+      cat("  H1B: Model 2 fits better than Model 1 \n")
+      cat("  z = ", formatC(x$LRTstat, digits=3L, format="f"), ",   ",
+          "p = ", format.pval(x$p_LRT[[2]], digits=4L), "\n", sep="")
+  }
 }
 
 
 .onAttach <- function(...) {
-  packageStartupMessage("  This is nonnest2 0.1-1
+  packageStartupMessage("  This is nonnest2 0.2
   nonnest2 is BETA software! Please report any bugs.")
 }

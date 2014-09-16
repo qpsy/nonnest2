@@ -1,6 +1,6 @@
 #' Information Criteria Confidence Intervals
 #'
-#' Calculate confidence intervals of AIC and BIC.
+#' Calculate confidence intervals of AIC and BIC for non-nested models.
 #'
 #' Functionality is currently available for models of classes
 #' \code{lm}, \code{glm}, \code{glm.nb}, \code{clm}, \code{hurdle}, \code{zeroinfl}, \code{mlogit}, \code{nls}, \code{polr}, \code{rlm}, and \code{lavaan}.
@@ -11,6 +11,10 @@
 #' each model object.  Assuming the same data matrix is used to fit each model,
 #' observation ordering should generally be identical.  There are currently
 #' no checks for this, however.
+#'
+#' Note: if models are nested or if the "variance test" from
+#' \code{vuongtest()} indicates models are indistinguishable, then the
+#' intervals returned from \code{icci()} will be incorrect.
 #'
 #' @param object1 a model object
 #' @param object2 a model object
@@ -64,12 +68,6 @@ icci <- function(object1, object2, conf.level=.95) {
 
   llA <- llcont(object1)
   llB <- llcont(object2)
-
-  ## if (!isTRUE(all.equal(sum(llA), as.numeric(logLik(object1)))))
-  ##   stop("The individual log-likelihoods do not sum up to the log-likelihood. Please report your model and object to the maintainer.")
-
-  ## if (!isTRUE(all.equal(sum(llB), as.numeric(logLik(object2)))))
-  ##   stop("The individual log-likelihoods do not sum up to the log-likelihood. Please report your model and object to the maintainer.")
 
   ## Eq (4.2)
   n <- NROW(llA)
