@@ -1,0 +1,8 @@
+Changes in Version 0.2
+
+    o Added argument "nested" to vuongtest(), allowing the user
+      to specify whether or not candidate models are nested.  This
+      impacts the limiting distribution of the Vuong LRT.
+
+    o print methods no longer display the full call of each model
+      (just the first line).
