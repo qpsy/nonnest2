@@ -1,12 +1,16 @@
 #' Vuong Tests for Model Comparison
 #'
-#' Test pairs of non-nested models using Vuong's (1989) theory.  This includes
+#' Test pairs of models using Vuong's (1989) theory.  This includes
 #' a test of model distinguishability and a test of model fit.
 #'
 #' For non-nested models, the test of distinguishability indicates whether or
 #' not the models can possibly be distinguished on the basis of the observed
 #' data.  The LRT then indicates whether or not one model fits better
 #' than another.
+#'
+#' For nested models (\code{nested=TRUE}), both tests serve as robust
+#' alternatives to the classical likelihood ratio tests.  In this case,
+#' the \code{adj} argument is ignored.
 #'
 #' Users should take care to ensure that the two models have
 #' the same dependent variable (or, for lavaan objects, identical
@@ -19,6 +23,7 @@
 #' @param object1 a model object
 #' @param object2 a model object
 #' @param nested if \code{TRUE}, models are assumed to be nested
+#' @param adj Should an adjusted test statistic be calculated?  Defaults to "none", with possible adjustments being "aic" and "bic"
 #'
 #' @author Ed Merkle and Dongjun You
 #'
@@ -71,7 +76,7 @@
 #' @importFrom sandwich estfun
 #' @importFrom CompQuadForm imhof
 #' @export
-vuongtest <- function(object1, object2, nested=FALSE) {
+vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
   classA <- class(object1)[1L]
   classB <- class(object2)[1L]
   callA <- if (isS4(object1)) object1@call else object1$call
@@ -110,6 +115,15 @@ vuongtest <- function(object1, object2, nested=FALSE) {
   lr <- sum(llA - llB)
   teststat <- (1/sqrt(n)) * lr/sqrt(omega.hat.2)
 
+  ## Adjustments to test statistics
+  if(adj=="aic"){
+    teststat <- teststat - (length(coef(object1)) - length(coef(object2)))
+  }
+  if(adj=="bic"){
+    teststat <- teststat -
+      (length(coef(object1)) - length(coef(object2))) * log(n)/2
+  }
+  
   ## Null distribution and test stat depend on nested
   if(nested){
       teststat <- 2 * lr

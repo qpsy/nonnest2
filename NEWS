@@ -4,5 +4,11 @@ Changes in Version 0.2
       to specify whether or not candidate models are nested.  This
       impacts the limiting distribution of the Vuong LRT.
 
+    o Added argument "adj" to vuongtest(), allowing the user
+      to obtain test statistics with AIC or BIC adjustments.
+
     o print methods no longer display the full call of each model
       (just the first line).
+
+    o BIC intervals added for objects of class hurdle, zeroinfl, 
+      mlogit (were missing because they didn't have an nobs method).
