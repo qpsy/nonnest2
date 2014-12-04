@@ -23,7 +23,7 @@
 #' @param object1 a model object
 #' @param object2 a model object
 #' @param nested if \code{TRUE}, models are assumed to be nested
-#' @param adj Should an adjusted test statistic be calculated?  Defaults to "none", with possible adjustments being "aic" and "bic"
+#' @param adj Should an adjusted test statistic be calculated?  Defaults to ``none'', with possible adjustments being ``aic'' and ``bic''
 #'
 #' @author Ed Merkle and Dongjun You
 #'
@@ -123,7 +123,7 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
     teststat <- teststat -
       (length(coef(object1)) - length(coef(object2))) * log(n)/2
   }
-  
+
   ## Null distribution and test stat depend on nested
   if(nested){
       teststat <- 2 * lr
@@ -140,7 +140,7 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
       ## print(imhof(teststat, lamstar)[[1]])
       ## davies without negative weights
       ## print(davies(teststat, lamstar)$Qq)
-      
+
       pLRTB <- NA
   } else {
       ## Two 1-tailed p-values from a normal:
@@ -224,7 +224,7 @@ print.vuongtest <- function(x, ...) {
       cat("  H1: Model 1 fits better than Model 2 \n")
       cat("  LR = ", formatC(x$LRTstat, digits=3L, format="f"), ",   ",
           "p = ", format.pval(x$p_LRT[[1]], digits=3L), "\n", sep="")
-  } else {      
+  } else {
       cat("Non-nested likelihood ratio test \n")
       cat("  H0: Model fits are equal for the focal population \n")
       cat("  H1A: Model 1 fits better than Model 2 \n")
