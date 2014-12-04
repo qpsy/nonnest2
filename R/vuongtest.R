@@ -23,7 +23,7 @@
 #' @param object1 a model object
 #' @param object2 a model object
 #' @param nested if \code{TRUE}, models are assumed to be nested
-#' @param adj Should an adjusted test statistic be calculated?  Defaults to ``none'', with possible adjustments being ``aic'' and ``bic''
+#' @param adj Should an adjusted test statistic be calculated?  Defaults to \dQuote{none}, with possible adjustments being \dQuote{aic} and \dQuote{bic}
 #'
 #' @author Ed Merkle and Dongjun You
 #'

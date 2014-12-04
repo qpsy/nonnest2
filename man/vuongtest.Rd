@@ -12,7 +12,7 @@ vuongtest(object1, object2, nested = FALSE, adj = "none")
 
 \item{nested}{if \code{TRUE}, models are assumed to be nested}
 
-\item{adj}{Should an adjusted test statistic be calculated?  Defaults to ``none'', with possible adjustments being ``aic'' and ``bic''}
+\item{adj}{Should an adjusted test statistic be calculated?  Defaults to \dQuote{none}, with possible adjustments being \dQuote{aic} and \dQuote{bic}}
 }
 \value{
 an object of class \code{vuongtest} containing test results.
