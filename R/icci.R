@@ -114,7 +114,7 @@ print.icci <- function(x, ...) {
   cat(" BIC:", formatC(x$BIC$BIC1, digits=3L, format="f"), "\n")
   cat("Model 2 \n")
   cat(" Class:", x$class$class2, "\n")
-  cat(" Call:", deparse(x$call$call2, nlines=1), "\n", fill=TRUE)
+  cat(" Call:", deparse(x$call$call2, nlines=1), fill=TRUE)
   cat(" AIC:", formatC(x$AIC$AIC2, digits=3L, format="f"), "\n")
   cat(" BIC:", formatC(x$BIC$BIC2, digits=3L, format="f"), "\n\n")
 
