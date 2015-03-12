@@ -106,7 +106,7 @@ icci <- function(object1, object2, conf.level=.95) {
 ################################################################
 #' @method print icci
 #' @export
-print.icci <- function(x ...) {
+print.icci <- function(x, ...) {
   cat("\nModel 1 \n")
   cat(" Class:", x$class$class1, "\n")
   ## a char vector with each element of length 'width.cutoff'
