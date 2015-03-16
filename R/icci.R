@@ -111,14 +111,14 @@ print.icci <- function(x, ...) {
   cat(" Class:", x$class$class1, "\n")
   ## a char vector with each element of length 'width.cutoff'
   model1call <- deparse(x$call$call1)
-  cat(" Call:", model1call[1], if (length(model1call) > 1) "...\n" else "\n")
+  cat(" Call: ", model1call[1], if (length(model1call) > 1) "...\n" else "\n", sep="")
   cat(" AIC:", formatC(x$AIC$AIC1, digits=3L, format="f"), "\n")
   cat(" BIC:", formatC(x$BIC$BIC1, digits=3L, format="f"), "\n")
   cat("\nModel 2 \n")
   cat(" Class:", x$class$class2, "\n")
   ## a char vector with each element of length 'width.cutoff'
   model2call <- deparse(x$call$call2)
-  cat(" Call:", model2call[1], if (length(model2call) > 1) "...\n" else "\n")
+  cat(" Call: ", model2call[1], if (length(model2call) > 1) "...\n" else "\n", sep="")
   cat(" AIC:", formatC(x$AIC$AIC2, digits=3L, format="f"), "\n")
   cat(" BIC:", formatC(x$BIC$BIC2, digits=3L, format="f"), "\n\n")
 

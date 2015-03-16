@@ -207,31 +207,33 @@ calcLambda <- function(object1, object2, n) {
 print.vuongtest <- function(x, ...) {
   cat("\nModel 1 \n")
   cat(" Class:", x$class$class1, "\n")
-  cat(" Call:", deparse(x$call$call1, nlines=1), "\n\n")
-  cat("Model 2 \n")
+  model1call <- deparse(x$call$call1)
+  cat(" Call: ", model1call[1], if (length(model1call) > 1) "...\n" else "\n", sep="")
+  cat("\nModel 2 \n")
   cat(" Class:", x$class$class2, "\n")
-  cat(" Call:", deparse(x$call$call2, nlines=1), "\n\n\n")
+  model2call <- deparse(x$call$call2)
+  cat(" Call: ", model2call[1], if (length(model2call) > 1) "...\n" else "\n", sep="")
 
-  cat("Variance test \n")
+  cat("\nVariance test \n")
   cat("  H0: Model 1 and Model 2 are indistinguishable", "\n")
   cat("  H1: Model 1 and Model 2 are distinguishable", "\n")
-  cat("  w2 = ", formatC(x$omega, digits=3L, format="f"), ",   ",
+  cat("    w2 = ", formatC(x$omega, digits=3L, format="f"), ",   ",
       "p = ", format.pval(x$p_omega, digits=3L), "\n\n", sep="")
 
   if(x$nested){
       cat("Robust likelihood ratio test of distinguishable models \n")
       cat("  H0: Model 2 fits as well as Model 1 \n")
       cat("  H1: Model 1 fits better than Model 2 \n")
-      cat("  LR = ", formatC(x$LRTstat, digits=3L, format="f"), ",   ",
+      cat("    LR = ", formatC(x$LRTstat, digits=3L, format="f"), ",   ",
           "p = ", format.pval(x$p_LRT[[1]], digits=3L), "\n", sep="")
   } else {
       cat("Non-nested likelihood ratio test \n")
       cat("  H0: Model fits are equal for the focal population \n")
       cat("  H1A: Model 1 fits better than Model 2 \n")
-      cat("  z = ", formatC(x$LRTstat, digits=3L, format="f"), ",   ",
+      cat("    z = ", formatC(x$LRTstat, digits=3L, format="f"), ",   ",
           "p = ", format.pval(x$p_LRT[[1]], digits=3L), "\n", sep="")
       cat("  H1B: Model 2 fits better than Model 1 \n")
-      cat("  z = ", formatC(x$LRTstat, digits=3L, format="f"), ",   ",
+      cat("    z = ", formatC(x$LRTstat, digits=3L, format="f"), ",   ",
           "p = ", format.pval(x$p_LRT[[2]], digits=4L), "\n", sep="")
   }
 }
