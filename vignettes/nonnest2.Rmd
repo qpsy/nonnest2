@@ -1,0 +1,24 @@
+---
+title: "Comparision of Non-nest Models"
+author: "Edgar C. Merkle and Dongjun You"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Comparision of Non-nest Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+# An Introduction
+
+## 1. Installation
+
+You can install **nonnest2** from [CRAN](http://cran.rstudio.com/package=nonnest2), if you want to test the latest development version:
+
+```{r eval=FALSE}
+install.packages('nonnest2', repos = 'http://cran.rstudio.com')
+
+# to install the development version, run
+# library(devtools)
+# install_github("qpsy/nonnest2")
+```

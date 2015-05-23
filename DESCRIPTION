@@ -8,11 +8,13 @@ Description: Testing non-nested models via theory supplied by Vuong (1989).
     Includes tests of model distinguishability and of model fit that
     can be applied to both nested and non-nested models.  Also includes
     functionality to obtain confidence intervals associated with AIC and BIC.
-Depends:
+Depends: 
     R (>= 3.0.0)
-Imports:
+Imports: 
     CompQuadForm,
     mvtnorm,
     sandwich
 License: GPL-2 | GPL-3
 LazyData: yes
+Suggests: knitr
+VignetteBuilder: knitr
