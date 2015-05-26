@@ -240,6 +240,5 @@ print.vuongtest <- function(x, ...) {
 
 
 .onAttach <- function(...) {
-  packageStartupMessage("  This is nonnest2 0.2
-  nonnest2 is BETA software! Please report any bugs.")
+  packageStartupMessage("  This is nonnest2 0.3\n nonnest2 has been tested primarily with objects of class\n lavaan.  Extensions to many other classes are available,\n but they are not (yet) fully tested.")
 }
