@@ -2,23 +2,196 @@
 title: "Comparision of Non-nest Models"
 author: "Edgar C. Merkle and Dongjun You"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::pdf_document:
+    includes:
+      in_header: nonnest2-preamble.tex
 vignette: >
   %\VignetteIndexEntry{Comparision of Non-nest Models}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
+  %\VignetteDepends{nonnest2}
 ---
 
 # An Introduction
+
+```{r echo=FALSE, message=FALSE}
+## global knitr options
+knitr::opts_chunk$set(fig.path='figure/nonnest2-', fig.align='center',
+                      fig.show='hold', size='footnotesize', 
+                      cache.path="cache/", warning=FALSE, message=FALSE)
+
+## packages
+library("simsem")
+library("nonnest2")
+```
 
 ## 1. Installation
 
 You can install **nonnest2** from [CRAN](http://cran.rstudio.com/package=nonnest2), if you want to test the latest development version:
 
 ```{r eval=FALSE}
-install.packages('nonnest2', repos = 'http://cran.rstudio.com')
+install.packages('nonnest2')
 
 # to install the development version, run
 # library(devtools)
 # install_github("qpsy/nonnest2")
+```
+
+
+# 2. Analysis
+
+## 2.1. Non-distinguishable Models
+
+\begin{figure}[H]
+\centering
+\resizebox{0.45\textwidth}{!}{
+\input{diagram}
+}
+\caption{Population Model}
+\end{figure}
+
+\begin{figure}%
+  \centering
+  \begin{subfigure}[t]{0.5\textwidth}%
+    \centering
+    \captionsetup{justification=centering,font=scriptsize}
+    \resizebox{0.9\textwidth}{!}{
+      \input{diagramA}
+    }
+    \caption*{Model A}\label{fig:modelA}
+  \end{subfigure}%
+  ~
+  \begin{subfigure}[t]{0.5\textwidth}%
+    \centering
+    \captionsetup{justification=centering,font=scriptsize}
+    \resizebox{0.9\textwidth}{!}{
+      \input{diagramB}
+    }
+    \caption*{Model B ($\xi_2 \rightarrow X_3$)}\label{fig:modelB}
+  \end{subfigure}%
+  \caption{Path diagrams reflecting the two competing models}
+  \label{fig:competingModels}
+\end{figure}
+
+```{r model_pop1, echo=FALSE}
+# population model
+loading <- matrix(0, 6, 2) 
+loading[1:3, 1] <- NA 
+loading[4:6, 2] <- NA
+# population values
+loadingValues <- matrix(0, 6, 2)  
+loadingValues[1:3, 1] <- 0.7  
+loadingValues[4:6, 2] <- 0.7
+# factor loading object
+LX <- bind(loading, loadingValues)
+
+# error covariances
+errorCor <- diag(nrow=6, ncol=6)
+RTE <- binds(errorCor)
+
+# latent covariances
+latentCor <- matrix(NA, 2, 2)
+diag(latentCor) <- 1
+RPS <- binds(latentCor, 0.5)
+
+modelpop1 <- model(LY = LX, RPS = RPS, RTE = RTE, modelType="CFA")
+set.seed(2015)
+dat1 <- generate(modelpop1, 200)
+```
+
+```{r model_A, echo=FALSE}
+# model A
+loadingA <- matrix(0, 6, 2) 
+loadingA[1:4, 1] <- NA # 1:4 
+loadingA[4:6, 2] <- NA
+
+# factor loading object
+LXA <- bind(loadingA)
+
+errorCorA <- diag(NA, nrow=6, ncol=6)
+RTEA <- binds(errorCorA)
+
+latentCorA <- matrix(NA, 2, 2)
+RPSA <- binds(latentCorA)
+modelA_gen <- model(LY = LXA, RPS = RPSA, RTE = RTEA, modelType="CFA")
+modelA <- modelA_gen@pt
+```
+
+```{r model_B, echo=FALSE}
+# model B
+loadingB <- matrix(0, 6, 2) 
+loadingB[1:3, 1] <- NA # 1:4 
+loadingB[3:6, 2] <- NA
+
+# factor loading object
+LXB <- bind(loadingB)
+
+errorCorB <- diag(NA, nrow=6, ncol=6)
+RTEB <- binds(errorCorB)
+
+latentCorB <- matrix(NA, 2, 2)
+RPSB <- binds(latentCorB)
+modelB_gen <- model(LY = LXB, RPS = RPSB, RTE = RTEB, modelType="CFA")
+modelB <- modelB_gen@pt
+```
+
+```{r echo=TRUE}
+modelA_1 <- cfa(modelA, data=dat1)
+modelA_1
+
+modelB_1 <- cfa(modelB, data=dat1)
+modelB_1
+```
+
+```{r}
+vuongtest(modelA_1, modelB_1)
+```
+
+```{r}
+icci(modelA_1, modelB_1)
+```
+
+## 2.2. Distiguishable and Non-Nested models
+
+\begin{figure}[H]
+\centering
+\resizebox{0.45\textwidth}{!}{
+\input{diagramA}
+}
+\caption{Population Model}
+\end{figure}
+
+```{r model_pop2, echo=FALSE}
+# population model
+loading2 <- matrix(0, 6, 2) 
+loading2[1:4, 1] <- NA 
+loading2[4:6, 2] <- NA
+# population values
+loadingValues2 <- matrix(0, 6, 2)  
+loadingValues2[1:3, 1] <- 0.7  
+loadingValues2[4, 1] <- 0.4
+loadingValues2[4:6, 2] <- 0.7
+# factor loading object
+LX2 <- bind(loading2, loadingValues2)
+
+modelpop2 <- model(LY = LX2, RPS = RPS, RTE = RTE, modelType="CFA")
+set.seed(2015)
+dat2 <- generate(modelpop2, 200)
+```
+
+```{r echo=TRUE}
+modelA_2 <- cfa(modelA, data=dat2)
+modelA_2
+
+modelB_2 <- cfa(modelB, data=dat2)
+modelB_2
+```
+
+```{r}
+vuongtest(modelA_2, modelB_2)
+```
+
+```{r}
+icci(modelA_2, modelB_2)
 ```

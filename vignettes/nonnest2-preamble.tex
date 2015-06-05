@@ -1,0 +1,16 @@
+\usepackage{epsfig, amsmath, alltt, bm, url, subcaption, float, tikz}
+\usetikzlibrary{decorations.pathmorphing,backgrounds,fit,calc,through,arrows,shapes,trees,positioning,matrix,chains}
+\tikzset{crossline/.style={opacity=.15,line width=4.5mm,line cap=round,color=#1},
+	method/.style={opacity=.15,fill,rounded corners,color=blue},
+	manifest/.style={rectangle,draw,inner sep=0.15em,minimum size=2.5em},
+	latent/.style={circle,draw,inner sep=0.15em,minimum size=2.7em},
+	error/.style={circle,draw,inner sep=0.15em,minimum size=2em},
+	every loop/.style={min distance=1em,in=70,out=110,looseness=3.5},
+	highlight/.style={rectangle,rounded corners,fill=red!15,draw,fill opacity=0.5,thick,inner sep=0pt}
+}
+
+\usepackage[american]{babel}
+\usepackage{csquotes}
+\usepackage[url=false, doi=false, style=apa, uniquename=false, backend=biber]{biblatex}
+\DeclareLanguageMapping{american}{american-apa}
+%\addbibresource{nonnest2.bib}

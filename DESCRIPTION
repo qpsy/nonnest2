@@ -16,5 +16,5 @@ Imports:
     sandwich
 License: GPL-2 | GPL-3
 LazyData: yes
-Suggests: knitr
+Suggests: knitr, simsem
 VignetteBuilder: knitr

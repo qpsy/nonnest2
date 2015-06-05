@@ -1,0 +1,42 @@
+\begin{tikzpicture}%[scale=1]
+	\matrix[row sep=1.5mm,ampersand replacement=\&] {
+		\node(X1)[manifest]{$X_{1}$}; \& \&[1em]
+		\node(X2)[manifest]{$X_{2}$}; \& \&[1em]
+		\node(X3)[manifest]{$X_{3}$}; \& \&[1em]
+		\node(X4)[manifest]{$X_{4}$}; \& \&[1em]
+		\node(X5)[manifest]{$X_{5}$}; \& \&[1em]
+		\node(X6)[manifest]{$X_{6}$}; \\
+	};
+
+	\node(F1)[latent] at ($(X2) + (0em,7em)$) {$\xi_1$};
+	\node(F2)[latent] at ($(X5) + (0em,7em)$) {$\xi_2$};
+
+
+\foreach \n in {1,2,3}{
+	\draw[-stealth'] (F1)--(X\n.north);
+%  	node[rectangle, pos=0.5,fill=white, inner sep=0.3ex]
+%         {$\scriptstyle 0.7$};
+}
+
+\foreach \n in {4,5,6}{
+	\draw[-stealth'] (F2)--(X\n.north);
+% 	  node[rectangle, pos=0.5,fill=white, inner sep=0.3ex]
+%          {$\scriptstyle 0.7$};
+}
+
+\foreach \n in {1,2,3,4,5,6}{
+	\node(E\n)[error] at ($(X\n) + (0em,-3.5em)$) {$\scriptstyle \epsilon_\n$};
+        \draw[-stealth'] (E\n.north)--(X\n.south);
+         %node [circle, pos=0.42, right, fill=white, inner sep=0.05em] {$\scriptscriptstyle 1$};
+}
+
+	% \draw[-stealth',gray,densely dashdotted] (F1)--(X4.north) node[rectangle,pos=0.4,fill=white,inner sep=0.3ex] {$\scriptstyle A$};
+% 	\draw[-stealth',gray,densely dashdotted] (F2)--(X3.north)
+%         node[rectangle,pos=0.4,fill=white,inner sep=0.3ex]
+%         {$\scriptstyle B$};
+         \draw[stealth'-stealth'] (F1.north) to [out=70, in=110] 
+%          node[rectangle, pos=0.5,fill=white, inner sep=0.3ex]
+%          {$\scriptstyle 0.5$} 
+         (F2.north);
+
+\end{tikzpicture}
