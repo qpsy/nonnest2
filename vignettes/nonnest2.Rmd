@@ -13,8 +13,6 @@ vignette: >
   %\VignetteDepends{nonnest2}
 ---
 
-# An Introduction
-
 ```{r echo=FALSE, message=FALSE}
 ## global knitr options
 knitr::opts_chunk$set(fig.path='figure/nonnest2-', fig.align='center',
@@ -26,9 +24,11 @@ library("simsem")
 library("nonnest2")
 ```
 
-## 1. Installation
+# Introduction
 
-You can install **nonnest2** from [CRAN](http://cran.rstudio.com/package=nonnest2), if you want to test the latest development version:
+Package **nonnest2** was designed to implement Vuong's (1989) theory of non-nested model comparison for many classes of R models.  It has been tested most thoroughly with structural equation models (of class `lavaan`) and with count regression models.  Functionality is available for many other classes, including `lm`, `glm`, `glm.nb`, `clm`, `hurdle`, `zeroinfl`, `mlogit`, `nls`, `polr`, and `rlm`.  Users are cautioned that, while we believe the results to be correct for these models, we have not tested all combinations of models.
+
+The package can be installed from [CRAN](http://cran.rstudio.com/package=nonnest2), or the development version is available via github:
 
 ```{r eval=FALSE}
 install.packages('nonnest2')
@@ -38,8 +38,10 @@ install.packages('nonnest2')
 # install_github("qpsy/nonnest2")
 ```
 
+# Analysis
+In this section, we highlight the package's functionality using a series of examples.  Given two models for comparison, there are different procedures depending on the relationship between the models.  Analysts can usually discern whether two models are nested or non-nested, and different arguments are used in these two situations.  For non-nested models, there is a further distinction between *overlapping* and *non-overlapping* models.  Roughly, overlapping models are those that, under particular parameter values, share some densities (with each model also possessing some unique densities).  Non-overlapping models do not share any densities.  
 
-# 2. Analysis
+Because it is often difficult to tell whether or not non-nested models are overlapping, we typically utilize a two-step testing procedure described by Vuong (1989).  In the first step, we test whether or not the two models are distinguishable from one another (this is a possibility if models are overlapping).  In the second step, we test whether or not the two models' fits are equal.  The examples below further illustrate the testing procedure along with the ideas of overlapping models and distinguishability.
 
 ## 2.1. Non-distinguishable Models
 
