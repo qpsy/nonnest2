@@ -9,9 +9,29 @@ test_that("lavaan object", {
                  speed   =~ x7 + x8 + x9 '
     fit1 <- cfa(HS.model, data=HolzingerSwineford1939)
     fit2 <- cfa(HS.model, data=HolzingerSwineford1939, group="school")
+    fit3 <- cfa(HS.model, data = HolzingerSwineford1939, group = "school",
+                group.equal = c("loadings"))
+    fit4 <- cfa(HS.model, data = HolzingerSwineford1939, group = "school",
+                group.equal = c("loadings"),
+                group.partial = c("visual=~x2", "x7~1"))
 
     expect_equal(sum(llcont(fit1)), as.numeric(logLik(fit1)))
     expect_equal(sum(llcont(fit2)), as.numeric(logLik(fit2)))
+    expect_equal(sum(llcont(fit3)), as.numeric(logLik(fit3)))
+    expect_equal(sum(llcont(fit4)), as.numeric(logLik(fit4)))
+    
+    HS.model2 <- 'visual =~ x1 + 0.5*x2 + c(0.6, 0.8)*x3
+                  textual =~ x4 + start(c(1.2, 0.6))*x5 + a*x6
+                  speed   =~ x7 + x8 + x9'
+    fit5 <- cfa(HS.model2, data=HolzingerSwineford1939, group="school")
+    
+    expect_equal(sum(llcont(fit5)), as.numeric(logLik(fit5)))
+    
+    HS.model3 <- 'visual =~ x1 + x2 + c(v3,v3)*x3
+                  textual =~ x4 + x5 + x6
+                  speed   =~ x7 + x8 + x9'
+    fit6 <- cfa(HS.model3, data=HolzingerSwineford1939, group="school")
+    expect_equal(sum(llcont(fit6)), as.numeric(logLik(fit6)))
   }
 })
 
