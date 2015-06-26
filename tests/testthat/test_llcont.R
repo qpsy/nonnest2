@@ -322,3 +322,27 @@ test_that("rlm object", {
     expect_equal(sum(llcont(rlm3)), as.numeric(logLik(rlm3)))
   }
 })
+
+
+test_that("SingleGroupClass", {
+  if (isTRUE(require("mirt"))) {
+    data <- expand.table(LSAT7)
+    mirts1 <- mirt(data, 1)
+    mirts2 <- mirt(data, 1, SE = TRUE)
+    mirts3 <- mirt(data, 1, SE = TRUE, SE.type = 'SEM')
+    mirts4 <- mirt(data, 1, SE = TRUE, SE.type = 'BL')
+    mirts5 <- mirt(data, 1, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'))
+    model <- 'F = 1-5
+              PRIOR = (5, g, norm, -1.5, 3)'
+    mirts6 <- mirt(data, model, itemtype = c('2PL', '2PL', '2PL', '2PL', '3PL'))
+    mirts7 <- mirt(data, 2)
+    
+    expect_equal(sum(llcont(mirts1)), as.numeric(mirts1@logLik))
+    expect_equal(sum(llcont(mirts2)), as.numeric(mirts2@logLik))
+    expect_equal(sum(llcont(mirts3)), as.numeric(mirts3@logLik))
+    expect_equal(sum(llcont(mirts4)), as.numeric(mirts4@logLik))
+    expect_equal(sum(llcont(mirts5)), as.numeric(mirts5@logLik))
+    expect_equal(sum(llcont(mirts6)), as.numeric(mirts6@logLik))
+    expect_equal(sum(llcont(mirts7)), as.numeric(mirts7@logLik))
+  }
+})
