@@ -5,8 +5,7 @@
 #' This is a S3 generic function.
 #' Currently, the method is defined for \code{lm}, \code{glm}, \code{glm.nb},
 #' \code{clm}, \code{hurdle}, \code{zeroinfl}, \code{mlogit}, \code{nls},
-#' \code{polr}, \code{rlm}, \code{lavaan} objects and 
-#' \code{SingleGroupClass} object from \code{mirt::mirt}.
+#' \code{polr}, \code{rlm}, \code{lavaan} objects.
 #'
 #' @param x a model object
 #' @param \dots arguments passed to specific methods
@@ -442,7 +441,6 @@ llcont.lavaan <- function(x, ...){
 ########################################################################
 ## individual log-likelihood of SingleGroupClass objects (mirt function) 
 ########################################################################
-#' @export
 llcont.SingleGroupClass <- function(x, ...)
 {
   sum(x@Data$Freq[[1L]] * log(x@Pl))
