@@ -57,9 +57,9 @@ m2 <- ' visual  =~ x1 + x2 + x3
         speed   =~ x7 + x8 + x9 '
 fit2 <- cfa(m2, data=HolzingerSwineford1939)
 ```
-Users familiar with the dataset will recognize that each model has an extra, unnecessary free loading: `m1` has a free loading from the visual factor to x4, while `m2` has a free loading from the textual factor to x7.  The estimates of these extra loadings will both be close to 0, but they will not be exactly zero.  Thus, while these two models will provide different fits to the data, the fits will be very similar.  Further, if we fit the models to the entire population (assuming that the population values of these loadings equal zero), then the fits would be exactly the same.  This illustrates the notion of *indistinguishability*: two models providing the same fit to a population of interest, but not necessarily to an observed sample.  This differs from the idea of *equivalence*, which would say that the models should provide exactly the same fits to the sample data as well as to the population data.
+Users familiar with the dataset will recognize that each model has an extra, unnecessary free loading: `m1` has a free loading from the visual factor to x4, while `m2` has a free loading from the textual factor to x7.  The estimates of these extra loadings will both be close to 0, but they will not be exactly zero.  Thus, while these two models will provide different fits to the data, the fits will be very similar.  Further, if we fit the models to the entire population (assuming that the population values of these loadings equal zero), then the fits would be exactly the same.  This illustrates the notion of *indistinguishability*: two models providing the same fit to a population of interest, but not necessarily to an observed sample.  This differs from the idea of *equivalence*, which says that the models provide exactly the same fits to the sample data as well as to the population data.
 
-We now use nonnest2 to apply Vuong tests to the two models:
+We now use nonnest2 to compare the two models via Vuong tests.
 ```{r}
 vuongtest(fit1, fit2)
 ```
@@ -69,7 +69,7 @@ We can also use Vuong's theory to obtain confidence intervals for the difference
 ```{r}
 icci(fit1, fit2)
 ```
-Based on this output, we see that the AIC and BIC statistics are close but lower for `fit1` than for `fit2`.  The 95% confidence intervals overlap with 0, implying that the model fits are sufficiently close that neither can be preferred over the other.  The confidence intervals are exactly the same here because both models have the same numbers of parameters; this would not typically occur for other models.
+Based on this output, we see that the AIC and BIC statistics are close but lower for `fit1` than for `fit2`.  The 95% confidence intervals overlap with 0, implying that the model fits are sufficiently close that neither can be preferred over the other.  The confidence intervals for AIC and BIC differences are exactly the same because both models have the same numbers of parameters; this would not typically occur for other models.
 
 ## Distiguishable and Non-Nested models
 
@@ -119,7 +119,7 @@ We now apply the Vuong tests to the two models.
 ```{r}
 vuongtest(fit1, fit2)
 ```
-We now see that the variance tests indicates that the models are distinguishable (at least, at $\alpha=.05$).  This allows us to move on to the second test, which compares the fits of the two models.  Based on this second test, we conclude that the two models have equal fit in the population of interest.  Note that *fit* is defined in terms of Kullback-Leibler distance (between each candidate model and the true model), and we make no assumption about either of the two candidate models being the true model.
+We now see that the variance tests indicates that the models are distinguishable (at least, at $\alpha=.05$).  This allows us to move on to the second test, which compares the fits of the two models.  Based on this second test, we conclude that the two models have equal fit in the population of interest.  Note that *fit* is defined here in terms of Kullback-Leibler distance (between each candidate model and the true model), and we make no assumption about either of the two candidate models being the true model.
 
 ## Nested models
 Finally, `vuongtest()` includes a `nested` argument, using Vuong's theory to compare nested models.  The resulting test statistics, which are very similar to the statistics described above, can be viewed as robust versions of the traditional likelihood ratio test (LRT) for nested models.  This is because Vuong's theory makes no assumption about either candidate model being the true model, whereas the traditional LRT assumes that the full model is the truth.
@@ -155,4 +155,4 @@ Both tests can be viewed as alternatives to the traditional likelihood ratio tes
 ```{r}
 anova(fit1, fit3)
 ```
-which shows that the results are very similar.  The Vuong likelihood ratio test statistic is equal to the traditional likelihood ratio test statistic, though the *p*-values differ.  This is because null distributions differ: the traditional LRT uses a chi-square null distribution, whereas the Vuong LRT uses a weighted sum of chi-square distributions.  The latter distribution converges to the traditional chi-square distribution if the full model is the true model.
+which provides similar results.  In particular, the Vuong likelihood ratio test statistic is equal to the traditional likelihood ratio test statistic, though the *p*-values differ.  This is because the null distributions differ: the traditional LRT uses a chi-square null distribution, whereas the Vuong LRT uses a weighted sum of chi-square distributions.  The latter distribution converges to the traditional chi-square distribution when the full model is the true model.
