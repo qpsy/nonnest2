@@ -1,5 +1,5 @@
 ---
-title: "Comparision of Non-nest Models"
+title: "Getting Started with nonnest2"
 author: "Edgar C. Merkle and Dongjun You"
 date: "`r Sys.Date()`"
 output: 
@@ -7,10 +7,10 @@ output:
     includes:
       in_header: nonnest2-preamble.tex
 vignette: >
-  %\VignetteIndexEntry{Comparision of Non-nest Models}
+  %\VignetteIndexEntry{Getting Started with nonnest2}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
-  %\VignetteDepends{nonnest2}
+  %\VignetteDepends{nonnest2,lavaan}
 ---
 
 ```{r echo=FALSE, message=FALSE}
@@ -20,7 +20,7 @@ knitr::opts_chunk$set(fig.path='figure/nonnest2-', fig.align='center',
                       cache.path="cache/", warning=FALSE, message=FALSE)
 
 ## packages
-library("simsem")
+library("lavaan")
 library("nonnest2")
 ```
 
@@ -31,7 +31,7 @@ Package **nonnest2** was designed to implement Vuong's (1989) theory of non-nest
 The package can be installed from [CRAN](http://cran.rstudio.com/package=nonnest2), or the development version is available via github:
 
 ```{r eval=FALSE}
-install.packages('nonnest2')
+install.packages("nonnest2")
 
 # to install the development version, run
 # library(devtools)
@@ -43,158 +43,116 @@ In this section, we highlight the package's functionality using a series of exam
 
 Because it is often difficult to tell whether or not non-nested models are overlapping, we typically utilize a two-step testing procedure described by Vuong (1989).  In the first step, we test whether or not the two models are distinguishable from one another (this is a possibility if models are overlapping).  In the second step, we test whether or not the two models' fits are equal.  The examples below further illustrate the testing procedure along with the ideas of overlapping models and distinguishability.
 
-## 2.1. Non-distinguishable Models
+## Indistinguishable Models
 
-\begin{figure}[H]
-\centering
-\resizebox{0.45\textwidth}{!}{
-\input{diagram}
-}
-\caption{Population Model}
-\end{figure}
-
-\begin{figure}%
-  \centering
-  \begin{subfigure}[t]{0.5\textwidth}%
-    \centering
-    \captionsetup{justification=centering,font=scriptsize}
-    \resizebox{0.9\textwidth}{!}{
-      \input{diagramA}
-    }
-    \caption*{Model A}\label{fig:modelA}
-  \end{subfigure}%
-  ~
-  \begin{subfigure}[t]{0.5\textwidth}%
-    \centering
-    \captionsetup{justification=centering,font=scriptsize}
-    \resizebox{0.9\textwidth}{!}{
-      \input{diagramB}
-    }
-    \caption*{Model B ($\xi_2 \rightarrow X_3$)}\label{fig:modelB}
-  \end{subfigure}%
-  \caption{Path diagrams reflecting the two competing models}
-  \label{fig:competingModels}
-\end{figure}
-
-```{r model_pop1, echo=FALSE}
-# population model
-loading <- matrix(0, 6, 2) 
-loading[1:3, 1] <- NA 
-loading[4:6, 2] <- NA
-# population values
-loadingValues <- matrix(0, 6, 2)  
-loadingValues[1:3, 1] <- 0.7  
-loadingValues[4:6, 2] <- 0.7
-# factor loading object
-LX <- bind(loading, loadingValues)
-
-# error covariances
-errorCor <- diag(nrow=6, ncol=6)
-RTE <- binds(errorCor)
-
-# latent covariances
-latentCor <- matrix(NA, 2, 2)
-diag(latentCor) <- 1
-RPS <- binds(latentCor, 0.5)
-
-modelpop1 <- model(LY = LX, RPS = RPS, RTE = RTE, modelType="CFA")
-set.seed(2015)
-dat1 <- generate(modelpop1, 200)
-```
-
-```{r model_A, echo=FALSE}
-# model A
-loadingA <- matrix(0, 6, 2) 
-loadingA[1:4, 1] <- NA # 1:4 
-loadingA[4:6, 2] <- NA
-
-# factor loading object
-LXA <- bind(loadingA)
-
-errorCorA <- diag(NA, nrow=6, ncol=6)
-RTEA <- binds(errorCorA)
-
-latentCorA <- matrix(NA, 2, 2)
-RPSA <- binds(latentCorA)
-modelA_gen <- model(LY = LXA, RPS = RPSA, RTE = RTEA, modelType="CFA")
-modelA <- modelA_gen@pt
-```
-
-```{r model_B, echo=FALSE}
-# model B
-loadingB <- matrix(0, 6, 2) 
-loadingB[1:3, 1] <- NA # 1:4 
-loadingB[3:6, 2] <- NA
-
-# factor loading object
-LXB <- bind(loadingB)
-
-errorCorB <- diag(NA, nrow=6, ncol=6)
-RTEB <- binds(errorCorB)
-
-latentCorB <- matrix(NA, 2, 2)
-RPSB <- binds(latentCorB)
-modelB_gen <- model(LY = LXB, RPS = RPSB, RTE = RTEB, modelType="CFA")
-modelB <- modelB_gen@pt
-```
-
-```{r echo=TRUE}
-modelA_1 <- cfa(modelA, data=dat1)
-modelA_1
-
-modelB_1 <- cfa(modelB, data=dat1)
-modelB_1
-```
-
+Consider the two non-nested confirmatory factor analysis models below, specified via `lavaan` syntax.
 ```{r}
-vuongtest(modelA_1, modelB_1)
-```
+m1 <- ' visual  =~ x1 + x2 + x3 + x4
+        textual =~ x4 + x5 + x6
+        speed   =~ x7 + x8 + x9 '
+fit1 <- cfa(m1, data=HolzingerSwineford1939)
 
+m2 <- ' visual  =~ x1 + x2 + x3
+        textual =~ x4 + x5 + x6 + x7
+        speed   =~ x7 + x8 + x9 '
+fit2 <- cfa(m2, data=HolzingerSwineford1939)
+```
+Users familiar with the dataset will recognize that each model has an extra, unnecessary free loading: `m1` has a free loading from the visual factor to x4, while `m2` has a free loading from the textual factor to x7.  The estimates of these extra loadings will both be close to 0, but they will not be exactly zero.  Thus, while these two models will provide different fits to the data, the fits will be very similar.  Further, if we fit the models to the entire population (assuming that the population values of these loadings equal zero), then the fits would be exactly the same.  This illustrates the notion of *indistinguishability*: two models providing the same fit to a population of interest, but not necessarily to an observed sample.  This differs from the idea of *equivalence*, which would say that the models should provide exactly the same fits to the sample data as well as to the population data.
+
+We now use nonnest2 to apply Vuong tests to the two models:
 ```{r}
-icci(modelA_1, modelB_1)
+vuongtest(fit1, fit2)
 ```
+We see that we obtain two tests, the *variance test* and the *non-nested likelihood ratio test*.  The former test informs us of the models' distinguishability, while the latter test compares the fits of two distinguishable models.  Focusing on the variance test here, we obtain a small test statistic and a large *p*-value.  These results imply that, as we suspected, the two models are indistinguishable in the focal population.
 
-## 2.2. Distiguishable and Non-Nested models
-
-\begin{figure}[H]
-\centering
-\resizebox{0.45\textwidth}{!}{
-\input{diagramA}
-}
-\caption{Population Model}
-\end{figure}
-
-```{r model_pop2, echo=FALSE}
-# population model
-loading2 <- matrix(0, 6, 2) 
-loading2[1:4, 1] <- NA 
-loading2[4:6, 2] <- NA
-# population values
-loadingValues2 <- matrix(0, 6, 2)  
-loadingValues2[1:3, 1] <- 0.7
-# reduce the value to prevent negative variance
-loadingValues2[4, 1] <- 0.3
-loadingValues2[4:6, 2] <- 0.7
-# factor loading object
-LX2 <- bind(loading2, loadingValues2)
-
-modelpop2 <- model(LY = LX2, RPS = RPS, RTE = RTE, modelType="CFA")
-set.seed(2015)
-dat2 <- generate(modelpop2, 200)
-```
-
-```{r echo=TRUE}
-modelA_2 <- cfa(modelA, data=dat2)
-modelA_2
-
-modelB_2 <- cfa(modelB, data=dat2)
-modelB_2
-```
-
+We can also use Vuong's theory to obtain confidence intervals for the difference in the models' AIC or BIC statistics:
 ```{r}
-vuongtest(modelA_2, modelB_2)
+icci(fit1, fit2)
+```
+Based on this output, we see that the AIC and BIC statistics are close but lower for `fit1` than for `fit2`.  The 95% confidence intervals overlap with 0, implying that the model fits are sufficiently close that neither can be preferred over the other.  The confidence intervals are exactly the same here because both models have the same numbers of parameters; this would not typically occur for other models.
+
+## Distiguishable and Non-Nested models
+
+Now consider the following structural equation models, using Bollen's political democracy data.  The first model is the original (classic) model, while the second model estimates different residual covariance parameters.  The models are non-nested due to the differing residual covariances.
+```{r}
+m1 <- ' 
+       # latent variable definitions
+          ind60 =~ x1 + x2 + x3
+          dem60 =~ y1 + a*y2 + b*y3 + c*y4
+          dem65 =~ y5 + a*y6 + b*y7 + c*y8
+     
+       # regressions
+         dem60 ~ ind60
+         dem65 ~ ind60 + dem60
+     
+       # residual correlations
+         y1 ~~ y5
+         y2 ~~ y4 + y6
+         y3 ~~ y7
+         y4 ~~ y8
+         y6 ~~ y8
+'
+     
+fit1 <- sem(m1, data=PoliticalDemocracy)
+
+m2 <- ' 
+       # latent variable definitions
+          ind60 =~ x1 + x2 + x3
+          dem60 =~ y1 + a*y2 + b*y3 + c*y4
+          dem65 =~ y5 + a*y6 + b*y7 + c*y8
+     
+       # regressions
+         dem60 ~ ind60
+         dem65 ~ ind60 + dem60
+     
+       # residual correlations
+         y1 ~~ y3 + y5
+         y2 ~~ y6
+         y3 ~~ y7
+         y4 ~~ y8
+         y5 ~~ y7
+'
+
+fit2 <- sem(m2, data=PoliticalDemocracy)
+```
+We now apply the Vuong tests to the two models.
+```{r}
+vuongtest(fit1, fit2)
+```
+We now see that the variance tests indicates that the models are distinguishable (at least, at $\alpha=.05$).  This allows us to move on to the second test, which compares the fits of the two models.  Based on this second test, we conclude that the two models have equal fit in the population of interest.  Note that *fit* is defined in terms of Kullback-Leibler distance (between each candidate model and the true model), and we make no assumption about either of the two candidate models being the true model.
+
+## Nested models
+Finally, `vuongtest()` includes a `nested` argument, using Vuong's theory to compare nested models.  The resulting test statistics, which are very similar to the statistics described above, can be viewed as robust versions of the traditional likelihood ratio test (LRT) for nested models.  This is because Vuong's theory makes no assumption about either candidate model being the true model, whereas the traditional LRT assumes that the full model is the truth.
+
+We first fit a third political democracy model, removing the equality constraints on some of the factor loadings.  As a result, `fit1` is nested in the model below.
+```{r}
+m3 <- ' 
+       # latent variable definitions
+          ind60 =~ x1 + x2 + x3
+          dem60 =~ y1 + y2 + y3 + y4
+          dem65 =~ y5 + y6 + y7 + y8
+     
+       # regressions
+         dem60 ~ ind60
+         dem65 ~ ind60 + dem60
+     
+       # residual correlations
+         y1 ~~ y5
+         y2 ~~ y4 + y6
+         y3 ~~ y7
+         y4 ~~ y8
+         y6 ~~ y8
+'
+     
+fit3 <- sem(m3, data=PoliticalDemocracy)
 ```
 
+We now use `vuongtest()` with the `nested=TRUE` argument.
 ```{r}
-icci(modelA_2, modelB_2)
+vuongtest(fit1, fit3, nested=TRUE)
 ```
+Both tests can be viewed as alternatives to the traditional likelihood ratio test, and they both indicate that the model fits are equal.  This implies that the reduced model (`fit1`) should be preferred.  We can also compare to the traditional LRT:
+```{r}
+anova(fit1, fit3)
+```
+which shows that the results are very similar.  The Vuong likelihood ratio test statistic is equal to the traditional likelihood ratio test statistic, though the *p*-values differ.  This is because null distributions differ: the traditional LRT uses a chi-square null distribution, whereas the Vuong LRT uses a weighted sum of chi-square distributions.  The latter distribution converges to the traditional chi-square distribution if the full model is the true model.

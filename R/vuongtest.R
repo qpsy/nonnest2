@@ -115,13 +115,15 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
   lr <- sum(llA - llB)
   teststat <- (1/sqrt(n)) * lr/sqrt(omega.hat.2)
 
-  ## Adjustments to test statistics
+  ## Adjustments to test statistics; the length(unique( is in case
+  ## coef() displays equality-constrained parameters twice.
   if(adj=="aic"){
-    teststat <- teststat - (length(coef(object1)) - length(coef(object2)))
+    teststat <- teststat - (length(unique(names(coef(object1)))) -
+                              length(unique(names(coef(object2)))))
   }
   if(adj=="bic"){
     teststat <- teststat -
-      (length(coef(object1)) - length(coef(object2))) * log(n)/2
+      (length(unique(names(coef(object1)))) - length(unique(names(coef(object2))))) * log(n)/2
   }
 
   ## Null distribution and test stat depend on nested
@@ -163,10 +165,17 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
 ################################################################
 calcAB <- function(object, n){
   ## Eq (2.1)
-  A <- chol2inv(chol(n * vcov(object)))
+  tmpvc <- vcov(object)
+  ## in case vcov() gives us equality-constrained parameters twice:
+  dups <- duplicated(rownames(tmpvc))
+  A <- chol2inv(chol(n * tmpvc[!dups, !dups]))
 
   ## Eq (2.2)
   sc <- estfun(object)
+  ## to deal with lavaan 0.5-18
+  if(class(object) == "lavaan"){
+    if(object@Model@eq.constraints) sc <- sc %*% object@Model@eq.constraints.K
+  }
   sc.cp <- crossprod(sc)/n
   B <- matrix(sc.cp, nrow(A), nrow(A))
 
@@ -240,5 +249,5 @@ print.vuongtest <- function(x, ...) {
 
 
 .onAttach <- function(...) {
-  packageStartupMessage("  This is nonnest2 0.3\n nonnest2 has been tested primarily with objects of class\n lavaan.  Extensions to many other classes are available,\n but they are not (yet) fully tested.")
+  packageStartupMessage("This is nonnest2 0.3\n nonnest2 has been tested primarily with objects of class\n lavaan.  Extensions to many other classes are available,\n but they are not (yet) fully tested.")
 }
