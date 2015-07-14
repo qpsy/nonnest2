@@ -1,5 +1,3 @@
-skip_on_cran()
-
 context("sum of llcont")
 
 test_that("lavaan object", {
