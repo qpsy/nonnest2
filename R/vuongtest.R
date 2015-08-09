@@ -105,25 +105,26 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
 
   ## Get p-value of weighted chi-square dist
   lamstar <- calcLambda(object1, object2, n)
+
   ## Note: dr package requires non-negative weights, which
   ##       does not help when nested==TRUE
   ## tmp <- dr.pvalue(lamstar2, n * omega.hat.2)
   ## pOmega <- tmp[[4]]
-  pOmega <- imhof(n * omega.hat.2, lamstar^2)[[1]]
+  pOmega <- imhof(n * omega.hat.2, lamstar^2)$Qq
 
   ## Calculate and test LRT; Eq (6.4)
   lr <- sum(llA - llB)
   teststat <- (1/sqrt(n)) * lr/sqrt(omega.hat.2)
 
-  ## Adjustments to test statistics; the length(unique( is in case
-  ## coef() displays equality-constrained parameters twice.
+  ## Adjustments to test statistics
+  ## FIXME lavaan equality constraints; use df instead?
   if(adj=="aic"){
-    teststat <- teststat - (length(unique(names(coef(object1)))) -
-                              length(unique(names(coef(object2)))))
+    teststat <- teststat - (length(coef(object1)) -
+                              length(coef(object2)))
   }
   if(adj=="bic"){
     teststat <- teststat -
-      (length(unique(names(coef(object1)))) - length(unique(names(coef(object2))))) * log(n)/2
+      (length(coef(object1)) - length(coef(object2))) * log(n)/2
   }
 
   ## Null distribution and test stat depend on nested
@@ -165,16 +166,18 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
 ################################################################
 calcAB <- function(object, n){
   ## Eq (2.1)
-  tmpvc <- vcov(object)
-  ## in case vcov() gives us equality-constrained parameters twice:
-  dups <- duplicated(rownames(tmpvc))
-  A <- chol2inv(chol(n * tmpvc[!dups, !dups]))
+  if(class(object) == "lavaan"){
+    A <- lavInspect(object, "information")
+  } else {
+    tmpvc <- vcov(object)
+    A <- chol2inv(chol(n * tmpvc))
+  }
 
   ## Eq (2.2)
   sc <- estfun(object)
   ## to deal with lavaan 0.5-18
   if(class(object) == "lavaan"){
-    if(object@Model@eq.constraints) sc <- sc %*% object@Model@eq.constraints.K
+    if(object@Model@eq.constraints) sc <- t(t(sc) + lavInspect(object, "gradient"))
   }
   sc.cp <- crossprod(sc)/n
   B <- matrix(sc.cp, nrow(A), nrow(A))
