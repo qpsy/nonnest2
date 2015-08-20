@@ -439,9 +439,9 @@ llcont.lavaan <- function(x, ...){
 }
 
 ########################################################################
-## individual log-likelihood of SingleGroupClass objects (mirt function) 
+## individual log-likelihood of SingleGroupClass objects (mirt function)
 ########################################################################
-llcont.SingleGroupClass <- function(x, ...)
-{
-  sum(x@Data$Freq[[1L]] * log(x@Pl))
-}
+## llcont.SingleGroupClass <- function(x, ...)
+## {
+##   sum(x@Data$Freq[[1L]] * log(x@Pl))
+## }
