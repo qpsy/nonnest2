@@ -429,7 +429,11 @@ llcont.lavaan <- function(x, ...){
         X <- M[[p]][["X"]]
         var.idx <- M[[p]][["var.idx"]]
 
-        tmpll[pat.idx==p] <- dmvnorm(X, Mu.hat[var.idx], Sigma.hat[var.idx, var.idx], log=TRUE)
+        if(sum(var.idx) > 1){
+          tmpll[pat.idx==p] <- dmvnorm(X, Mu.hat[var.idx], Sigma.hat[var.idx, var.idx], log=TRUE)
+        } else {
+          tmpll[pat.idx==p] <- dnorm(X, Mu.hat[var.idx], sqrt(Sigma.hat[var.idx, var.idx]), log=TRUE)
+        }
       }
 
       llvec[grpind] <- tmpll
