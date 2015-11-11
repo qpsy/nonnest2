@@ -167,17 +167,17 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
 calcAB <- function(object, n){
   ## Eq (2.1)
   if(class(object) == "lavaan"){
-    A <- lavInspect(object, "information")
+    A <- vcov(object, remove.duplicated=TRUE)
   } else {
     tmpvc <- vcov(object)
     A <- chol2inv(chol(n * tmpvc))
   }
 
   ## Eq (2.2)
-  sc <- estfun(object)
-  ## to deal with lavaan 0.5-18
   if(class(object) == "lavaan"){
-    if(object@Model@eq.constraints) sc <- t(t(sc) + lavInspect(object, "gradient"))
+    sc <- estfun(object, remove.duplicated=TRUE)
+  } else {
+    sc <- estfun(object)
   }
   sc.cp <- crossprod(sc)/n
   B <- matrix(sc.cp, nrow(A), nrow(A))
