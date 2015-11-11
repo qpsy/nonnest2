@@ -167,15 +167,23 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
 calcAB <- function(object, n){
   ## Eq (2.1)
   if(class(object) == "lavaan"){
+    tmpvc <- vcov(object)
+    dups <- duplicated(colnames(tmpvc))
+    tmpvc <- tmpvc[!dups,!dups]
+    ## to throw error if complex constraints
+    ## (NB we should eventually just use this instead of dups)
     if(nrow(object@Model@ceq.JAC) > 0){
-      A <- vcov(object, remove.duplicated=TRUE)
-    } else {
-      A <- vcov(object)
+      vcerr <- vcov(object, remove.duplicated=TRUE)
     }
+    #if(nrow(object@Model@ceq.JAC) > 0){
+    #  A <- vcov(object, remove.duplicated=TRUE)
+    #} else {
+    #  A <- vcov(object)
+    #}
   } else {
     tmpvc <- vcov(object)
-    A <- chol2inv(chol(n * tmpvc))
   }
+  A <- chol2inv(chol(n * tmpvc))
 
   ## Eq (2.2)
   if(class(object) == "lavaan"){
