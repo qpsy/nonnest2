@@ -59,6 +59,7 @@
 #' icci(fit1, fit2)
 #' }
 #'
+#' @importFrom stats AIC var qnorm
 #' @export
 icci <- function(object1, object2, conf.level=.95) {
   classA <- class(object1)[1L]

@@ -75,6 +75,8 @@
 #'
 #' @importFrom sandwich estfun
 #' @importFrom CompQuadForm imhof
+#' @importFrom stats coef pnorm var vcov
+#' @importMethodsFrom lavaan coef fitted logLik vcov
 #' @export
 vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
   classA <- class(object1)[1L]
