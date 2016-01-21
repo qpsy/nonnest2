@@ -1,9 +1,9 @@
 Package: nonnest2
 Title: Tests of Non-Nested Models
 Version: 0.3
-Date: 2015-11-30
-Author: Edgar C. Merkle and Dongjun You
-Maintainer: Dongjun You <dy5x4@mail.missouri.edu>
+Date: 2016-01-22
+Author: Edgar Merkle and Dongjun You
+Maintainer: Edgar Merkle <merklee@missouri.edu>
 Description: Testing non-nested models via theory supplied by Vuong (1989).
     Includes tests of model distinguishability and of model fit that can be applied
     to both nested and non-nested models. Also includes functionality to obtain
@@ -14,7 +14,7 @@ Depends:
 Imports:
     CompQuadForm,
     mvtnorm,
-    lavaan,
+    lavaan (>= 0.5-20),
     sandwich
 License: GPL-2 | GPL-3
 LazyData: yes
