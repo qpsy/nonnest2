@@ -391,8 +391,8 @@ llcont.rlm <- function (x, ...) {
 #' @export
 llcont.lavaan <- function(x, ...){
   ## make sure this is multivariate normal likelihood
-  if (x@Options$estimator != "ML"){
-      stop("llcont() only works for lavaan models fit under multivariate normality.")
+  if (x@Options$estimator != "ML" | x@Options$se != "standard"){
+      stop("nonnest2 only works for lavaan models fit via ML\n  (assuming multivariate normality, with no robust SEs).")
   }
   samplestats <- x@SampleStats
   ntab <- unlist(samplestats@nobs)

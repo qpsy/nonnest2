@@ -266,5 +266,5 @@ print.vuongtest <- function(x, ...) {
 
 
 .onAttach <- function(...) {
-  packageStartupMessage("This is nonnest2 0.3\n nonnest2 has not been tested with all combinations of models.")
+  packageStartupMessage("This is nonnest2 0.4\n nonnest2 has not been tested with all combinations of model classes.")
 }
