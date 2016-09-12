@@ -421,8 +421,7 @@ llcont.lavaan <- function(x, ...){
     } else { # incomplete data
       nsub <- ntab[g]
       M <- samplestats@missing[[g]]
-      MP1 <- x@Data@Mp[[g]]
-      pat.idx <- match(MP1$id, MP1$order)
+      Mp <- x@Data@Mp[[g]]
       tmpll <- rep(NA, nsub)
 
       Mu.hat <- unclass(moments$mean)
@@ -430,14 +429,16 @@ llcont.lavaan <- function(x, ...){
 
       for(p in 1:length(M)) {
         ## Data
-        X <- M[[p]][["X"]]
+        #X <- M[[p]][["X"]]
+        case.idx <- Mp$case.idx[[p]]
         var.idx <- M[[p]][["var.idx"]]
+        X <- x@Data@X[[g]][case.idx, var.idx, drop = FALSE]
 
         ## avoid fail for one observed variable
         if(sum(var.idx) == 1){
-          tmpll[pat.idx==p] <- dnorm(X, Mu.hat[var.idx], sqrt(Sigma.hat[var.idx,var.idx]), log=TRUE)
+          tmpll[case.idx] <- dnorm(X, Mu.hat[var.idx], sqrt(Sigma.hat[var.idx,var.idx]), log=TRUE)
         } else {
-          tmpll[pat.idx==p] <- dmvnorm(X, Mu.hat[var.idx], Sigma.hat[var.idx, var.idx], log=TRUE)
+          tmpll[case.idx] <- dmvnorm(X, Mu.hat[var.idx], Sigma.hat[var.idx, var.idx], log=TRUE)
         }
       }
 
