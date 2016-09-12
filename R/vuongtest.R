@@ -226,7 +226,7 @@ calcLambda <- function(object1, object2, n) {
 }
 
 ################################################################
-## print method for vuongtest (under construction)
+## print method for vuongtest
 ################################################################
 #' @method print vuongtest
 #' @export

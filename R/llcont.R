@@ -391,24 +391,26 @@ llcont.rlm <- function (x, ...) {
 #' @export
 llcont.lavaan <- function(x, ...){
   ## make sure this is multivariate normal likelihood
-  if (x@Options$estimator != "ML" | x@Options$se != "standard"){
+  if (lavInspect(x, "options")$estimator != "ML" |
+      lavInspect(x, "options")$se != "standard"){
       stop("nonnest2 only works for lavaan models fit via ML\n  (assuming multivariate normality, with no robust SEs).")
   }
   samplestats <- x@SampleStats
-  ntab <- unlist(samplestats@nobs)
-  llvec <- rep(NA, samplestats@ntotal)
+  ntab <- lavInspect(x, "nobs")
+  llvec <- rep(NA, lavInspect(x, "ntotal"))
+  ngroups <- lavInspect(x, "ngroups")
 
-  for(g in 1:samplestats@ngroups) {
-    if (samplestats@ngroups > 1){
+  for(g in 1:ngroups) {
+    if (ngroups > 1){
       moments <- fitted(x)[[g]]
+      grpind <- lavInspect(x, "case.idx")[[g]]
     } else {
       moments <- fitted(x)
+      grpind <- lavInspect(x, "case.idx")
     }
     Sigma.hat <- unclass(moments$cov)
     ## To ensure it is symmetric; needed?
     Sigma.hat <- (Sigma.hat + t(Sigma.hat))/2
-    ## Which cases correspond to this group?
-    grpind <- x@Data@case.idx[[g]]
 
     if(!samplestats@missing.flag) { # complete data
       if(x@Model@meanstructure) { # mean structure
@@ -425,11 +427,10 @@ llcont.lavaan <- function(x, ...){
       tmpll <- rep(NA, nsub)
 
       Mu.hat <- unclass(moments$mean)
-      nvar <- ncol(samplestats@cov[[g]])
+      nvar <- ncol(moments$cov)
 
       for(p in 1:length(M)) {
         ## Data
-        #X <- M[[p]][["X"]]
         case.idx <- Mp$case.idx[[p]]
         var.idx <- M[[p]][["var.idx"]]
         X <- x@Data@X[[g]][case.idx, var.idx, drop = FALSE]
