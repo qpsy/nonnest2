@@ -26,6 +26,7 @@
 #' @importFrom stats dbinom dgamma dnbinom dnorm dpois
 #' @importFrom stats model.frame model.matrix model.response model.weights
 #' @importFrom stats weights deviance logLik
+#' @importFrom lavaan lavInspect
 #'
 #' @export
 llcont <- function(x, ...) UseMethod("llcont")

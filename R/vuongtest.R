@@ -1,6 +1,6 @@
 #' Vuong Tests for Model Comparison
 #'
-#' Test pairs of models using Vuong's (1989) theory.  This includes
+#' Test pairs of models using Vuong's (1989) <DOI:10.2307/1912557> theory.  This includes
 #' a test of model distinguishability and a test of model fit.
 #'
 #' For non-nested models, the test of distinguishability indicates whether or
@@ -31,9 +31,9 @@
 #'
 #' @references
 #'
-#' Vuong, Q. H. (1989).  Likelihood ratio tests for model selection and non-nested hypotheses.  \emph{Econometrica, 57}, 307-333.
+#' Vuong, Q. H. (1989).  Likelihood ratio tests for model selection and non-nested hypotheses.  \emph{Econometrica, 57}, 307-333. <DOI:10.2307/1912557>
 #'
-#' Merkle, E. C., You, D., & Preacher, K. (2014). Testing non-nested structural equation models.  \emph{Manuscript under review}.
+#' Merkle, E. C., You, D., & Preacher, K. (2016). Testing non-nested structural equation models.  \emph{Psychological Methods, 21}, 151-163. <DOI:10.1037/met0000038>
 #'
 #' @examples
 #' \dontrun{

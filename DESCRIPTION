@@ -1,10 +1,10 @@
 Package: nonnest2
 Title: Tests of Non-Nested Models
-Version: 0.4
-Date: 2016-09-12
+Version: 0.4-1
+Date: 2016-09-13
 Author: Edgar Merkle and Dongjun You
 Maintainer: Edgar Merkle <merklee@missouri.edu>
-Description: Testing non-nested models via theory supplied by Vuong (1989).
+Description: Testing non-nested models via theory supplied by Vuong (1989) <DOI:10.2307/1912557>.
     Includes tests of model distinguishability and of model fit that can be applied
     to both nested and non-nested models. Also includes functionality to obtain
     confidence intervals associated with AIC and BIC. This material is based on work
