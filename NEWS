@@ -1,8 +1,14 @@
+Changes in Version 0.4
+
+    o Update handling of missing data to conform to lavaan 0.5-21.
+
+    o Throw error in case lavaan model with robust SEs is sent in.
+
 Changes in Version 0.3
 
     o Added "Getting started" vignette.
 
-    o Changes to conform to lavaan 0.5-20's handling of equality constraints
+    o Changes to conform to lavaan 0.5-20's handling of equality constraints.
 
     o Fixed issue where print methods sometimes wrapped over lines.
 
