@@ -450,6 +450,14 @@ llcont.lavaan <- function(x, ...){
   llvec
 }
 
+################################################################
+## Getting log-likelihood of vglm objects for individual cases
+################################################################
+#' @export
+llcont.vglm <- function(x, ...){
+  logLik(x, summation = FALSE)
+}
+
 ########################################################################
 ## individual log-likelihood of SingleGroupClass objects (mirt function)
 ########################################################################
