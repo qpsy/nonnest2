@@ -168,7 +168,7 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
 ################################################################
 calcAB <- function(object, n){
   ## Eq (2.1)
-  if(class(object) == "lavaan"){
+  if(class(object)[1] == "lavaan"){
     tmpvc <- vcov(object)
     dups <- duplicated(colnames(tmpvc))
     tmpvc <- tmpvc[!dups,!dups]
@@ -188,7 +188,7 @@ calcAB <- function(object, n){
   A <- chol2inv(chol(n * tmpvc))
 
   ## Eq (2.2)
-  if(class(object) == "lavaan"){
+  if(class(object)[1] == "lavaan"){
     sc <- estfun(object, remove.duplicated=TRUE)
   } else {
     sc <- estfun(object)

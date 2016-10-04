@@ -1,7 +1,7 @@
 Package: nonnest2
 Title: Tests of Non-Nested Models
-Version: 0.4-1
-Date: 2016-09-13
+Version: 0.5
+Date: 2016-10-04
 Author: Edgar Merkle and Dongjun You
 Maintainer: Edgar Merkle <merklee@missouri.edu>
 Description: Testing non-nested models via theory supplied by Vuong (1989) <DOI:10.2307/1912557>.
