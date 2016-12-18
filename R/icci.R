@@ -162,12 +162,12 @@ print.icci <- function(x, ...) {
   
   
   cat(x$confLevel * 100,
-      "% Confidence Interval of AIC difference (AICdiff = sacAIC1 - sacAIC2) \n", sep="")
+      "% Confidence Interval of saCAIC difference (saCAICdiff = saCAIC1 - saCAIC2) \n", sep="")
   cat("  ", formatC(x$sacAICci[1], digits=3L, format="f"), " < ", "saCAICdiff",
       " < ", formatC(x$sacAICci[2], digits=3L, format="f"), "\n\n", sep="")
   
   cat(x$confLevel * 100,
-      "% Confidence Interval of BIC difference (BICdiff = saBIC1 - saBIC2) \n", sep="")
+      "% Confidence Interval of saBIC difference (BICdiff = saBIC1 - saBIC2) \n", sep="")
   cat("  ", formatC(x$saBICci[1], digits=3L, format="f"), " < ", "saBICdiff",
       " < ", formatC(x$saBICci[2], digits=3L, format="f"), "\n\n", sep="")
 }
