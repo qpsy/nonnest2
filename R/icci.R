@@ -80,14 +80,14 @@ icci <- function(object1, object2, conf.level=.95) {
   bicB <- AIC(object2, k = log(NROW(estfun(object2))))
   
   
-  sabicA <- AIC(object1, k = log(NROW(estfun(object1))/24))
-  sabicB <- AIC(object2, k = log(NROW(estfun(object2))/24))
+  sabicA <- AIC(object1, k = log(NROW(estfun(object1)))/24)
+  sabicB <- AIC(object2, k = log(NROW(estfun(object2)))/24)
 
   aicA <- AIC(object1)
   aicB <- AIC(object2)
   
-  sacaicA <- AIC(object1, k = log(NROW(estfun(object1))/24)+1)
-  sacaicB <- AIC(object2, k = log(NROW(estfun(object2))/24)+1)
+  sacaicA <- AIC(object1, k = log(NROW(estfun(object1)))/24)+1
+  sacaicB <- AIC(object2, k = log(NROW(estfun(object2)))/24)+1
 
   bicdiff <- bicA - bicB
   sabicdiff <- sabicA - sabicB
