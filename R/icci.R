@@ -78,18 +78,34 @@ icci <- function(object1, object2, conf.level=.95) {
   ## don't have an nobs() method
   bicA <- AIC(object1, k = log(NROW(estfun(object1))))
   bicB <- AIC(object2, k = log(NROW(estfun(object2))))
+  
+  
+  sabicA <- AIC(object1, k = log(NROW(estfun(object1))/24))
+  sabicB <- AIC(object2, k = log(NROW(estfun(object2))/24))
 
   aicA <- AIC(object1)
   aicB <- AIC(object2)
+  
+  sacaicA <- AIC(object1, k = log(NROW(estfun(object1))/24)+1)
+  sacaicB <- AIC(object2, k = log(NROW(estfun(object2))/24)+1)
 
   bicdiff <- bicA - bicB
+  sabicdiff <- sabicA - sabicB
   aicdiff <- aicA - aicB
+  sacaicdiff <- sacaicA - sacaicB
   alpha <- 1 - conf.level
-
+  
   ## BIC CI
   BICci <- bicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
+  
+  ## saBIC CI
+  saBICci <- sabicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
+  
   ## AIC CI
   AICci <- aicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
+  
+  ## sacAIC CI
+  sacAICci <- sacaicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
 
   rval <- list(class = list(class1=classA, class2=classB),
                call = list(call1=callA, call2=callB),
@@ -97,6 +113,13 @@ icci <- function(object1, object2, conf.level=.95) {
                BICci = BICci,
                AIC = list(AIC1=aicA, AIC2=aicB),
                AICci = AICci,
+               
+               saBIC = list(BIC1=sabicA, BIC2=sabicB),
+               saBICci = saBICci,
+               
+               sacAIC = list(sacAIC1=sacaicA, AIC2=sacaicB),
+               sacAICci = sacAICci,
+               
                confLevel = conf.level)
   class(rval) <- "icci"
   return(rval)
@@ -115,13 +138,17 @@ print.icci <- function(x, ...) {
   cat(" Call: ", model1call[1], if (length(model1call) > 1) "...\n" else "\n", sep="")
   cat(" AIC:", formatC(x$AIC$AIC1, digits=3L, format="f"), "\n")
   cat(" BIC:", formatC(x$BIC$BIC1, digits=3L, format="f"), "\n")
+  cat(" saCAIC:", formatC(x$sacAIC$sacAIC1, digits=3L, format="f"), "\n")
+  cat(" saBIC:", formatC(x$saBIC$saBIC1, digits=3L, format="f"), "\n")
   cat("\nModel 2 \n")
   cat(" Class:", x$class$class2, "\n")
   ## a char vector with each element of length 'width.cutoff'
   model2call <- deparse(x$call$call2)
   cat(" Call: ", model2call[1], if (length(model2call) > 1) "...\n" else "\n", sep="")
   cat(" AIC:", formatC(x$AIC$AIC2, digits=3L, format="f"), "\n")
-  cat(" BIC:", formatC(x$BIC$BIC2, digits=3L, format="f"), "\n\n")
+  cat(" BIC:", formatC(x$BIC$BIC2, digits=3L, format="f"), "\n")
+  cat(" saCAIC:", formatC(x$sacAIC$sacAIC2, digits=3L, format="f"), "\n")
+  cat(" saBIC:", formatC(x$saBIC$saBIC2, digits=3L, format="f"), "\n\n")
 
   cat(x$confLevel * 100,
       "% Confidence Interval of AIC difference (AICdiff = AIC1 - AIC2) \n", sep="")
@@ -132,4 +159,15 @@ print.icci <- function(x, ...) {
       "% Confidence Interval of BIC difference (BICdiff = BIC1 - BIC2) \n", sep="")
   cat("  ", formatC(x$BICci[1], digits=3L, format="f"), " < ", "BICdiff",
       " < ", formatC(x$BICci[2], digits=3L, format="f"), "\n", sep="")
+  
+  
+  cat(x$confLevel * 100,
+      "% Confidence Interval of AIC difference (AICdiff = sacAIC1 - sacAIC2) \n", sep="")
+  cat("  ", formatC(x$AICci[1], digits=3L, format="f"), " < ", "saCAICdiff",
+      " < ", formatC(x$AICci[2], digits=3L, format="f"), "\n\n", sep="")
+  
+  cat(x$confLevel * 100,
+      "% Confidence Interval of BIC difference (BICdiff = saBIC1 - saBIC2) \n", sep="")
+  cat("  ", formatC(x$saBICci[1], digits=3L, format="f"), " < ", "saBICdiff",
+      " < ", formatC(x$saBICci[2], digits=3L, format="f"), "\n", sep="")
 }
