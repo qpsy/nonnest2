@@ -86,43 +86,43 @@ icci <- function(object1, object2, conf.level=.95) {
   aicA <- AIC(object1)
   aicB <- AIC(object2)
   
-  sacaicA <- AIC(object1, k = (log(NROW(estfun(object2))/24)+1))
+  sacaicA <- AIC(object1, k = (log(NROW(estfun(object1))/24)+1))
   sacaicB <- AIC(object2, k = (log(NROW(estfun(object2))/24)+1))
 
-bicdiff <- bicA - bicB
-sabicdiff <- sabicA - sabicB
-aicdiff <- aicA - aicB
-sacaicdiff <- sacaicA - sacaicB
-alpha <- 1 - conf.level
-
-## BIC CI
-BICci <- bicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
-
-## saBIC CI
-saBICci <- sabicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
-
-## AIC CI
-AICci <- aicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
-
-## sacAIC CI
-sacAICci <- sacaicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
-
-rval <- list(class = list(class1=classA, class2=classB),
-             call = list(call1=callA, call2=callB),
-             BIC = list(BIC1=bicA, BIC2=bicB),
-             BICci = BICci,
-             AIC = list(AIC1=aicA, AIC2=aicB),
-             AICci = AICci,
-             
-             saBIC = list(BIC1=sabicA, BIC2=sabicB),
-             saBICci = saBICci,
-             
-             sacAIC = list(sacAIC1=sacaicA, AIC2=sacaicB),
-             sacAICci = sacAICci,
-             
-             confLevel = conf.level)
-class(rval) <- "icci"
-return(rval)
+  bicdiff <- bicA - bicB
+  sabicdiff <- sabicA - sabicB
+  aicdiff <- aicA - aicB
+  sacaicdiff <- sacaicA - sacaicB
+  alpha <- 1 - conf.level
+  
+  ## BIC CI
+  BICci <- bicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
+  
+  ## saBIC CI
+  saBICci <- sabicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
+  
+  ## AIC CI
+  AICci <- aicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
+  
+  ## sacAIC CI
+  sacAICci <- sacaicdiff + qnorm(c(alpha/2,(1-alpha/2)))*sqrt(n * 4 * omega.hat.2)
+  
+  rval <- list(class = list(class1=classA, class2=classB),
+               call = list(call1=callA, call2=callB),
+               BIC = list(BIC1=bicA, BIC2=bicB),
+               BICci = BICci,
+               AIC = list(AIC1=aicA, AIC2=aicB),
+               AICci = AICci,
+               
+               saBIC = list(saBIC1=sabicA, saBIC2=sabicB),
+               saBICci = saBICci,
+               
+               sacAIC = list(sacAIC1=sacaicA, sacAIC2=sacaicB),
+               sacAICci = sacAICci,
+               
+               confLevel = conf.level)
+  class(rval) <- "icci"
+  return(rval)
 }
 
 ################################################################
