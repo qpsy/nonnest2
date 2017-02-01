@@ -91,7 +91,7 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
   ## which has the larger log-likelihood.  From here on,
   ## object1 is the full model
   if(nested){
-      if(sum(llB) > sum(llA)){
+      if(sum(llB, na.rm = TRUE) > sum(llA, na.rm = TRUE)){
           tmp <- object1
           object1 <- object2
           object2 <- tmp
@@ -102,8 +102,9 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
   }
 
   ## Eq (4.2)
-  n <- NROW(llA)
-  omega.hat.2 <- (n-1)/n * var(llA - llB)
+  nmis <- sum(is.na(llA)) # (missing all data)
+  n <- NROW(llA) - nmis
+  omega.hat.2 <- (n-1)/n * var(llA - llB, na.rm = TRUE)
 
   ## Get p-value of weighted chi-square dist
   lamstar <- calcLambda(object1, object2, n)
@@ -115,7 +116,7 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
   pOmega <- imhof(n * omega.hat.2, lamstar^2)$Qq
 
   ## Calculate and test LRT; Eq (6.4)
-  lr <- sum(llA - llB)
+  lr <- sum(llA - llB, na.rm = TRUE)
   teststat <- (1/sqrt(n)) * lr/sqrt(omega.hat.2)
 
   ## Adjustments to test statistics

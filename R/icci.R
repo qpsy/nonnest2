@@ -71,8 +71,9 @@ icci <- function(object1, object2, conf.level=.95) {
   llB <- llcont(object2)
 
   ## Eq (4.2)
-  n <- NROW(llA)
-  omega.hat.2 <- (n-1)/n * var(llA - llB)
+  nmis <- sum(is.na(llA)) # (missing all data)
+  n <- NROW(llA) - nmis
+  omega.hat.2 <- (n-1)/n * var(llA - llB, na.rm = TRUE)
 
   ## BIC is computed like this because hurdle, zeroinfl, mlogit
   ## don't have an nobs() method
