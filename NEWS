@@ -1,6 +1,7 @@
 Changes in Version 0.5
 
-    o Allow for inclusion of completely missing cases.
+    o lavaan changes: allow for inclusion of completely missing 
+      cases and stop if missing = "listwise" or "pairwise"
 
 Changes in Version 0.4
 

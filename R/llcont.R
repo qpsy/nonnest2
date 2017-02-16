@@ -396,6 +396,9 @@ llcont.lavaan <- function(x, ...){
       lavInspect(x, "options")$se != "standard"){
       stop("nonnest2 only works for lavaan models fit via ML\n  (assuming multivariate normality, with no robust SEs).")
   }
+  if (lavInspect(x, "options")$missing != "ml"){
+      stop("nonnest2 does not work with pairwise/listwise deletion.\n  refit the model with missing='ml'.")
+  }
   samplestats <- x@SampleStats
   ntab <- lavInspect(x, "nobs")
   llvec <- rep(NA, lavInspect(x, "ntotal"))
