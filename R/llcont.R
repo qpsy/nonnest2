@@ -5,11 +5,13 @@
 #' This is a S3 generic function.
 #' Currently, the method is defined for \code{lm}, \code{glm}, \code{glm.nb},
 #' \code{clm}, \code{hurdle}, \code{zeroinfl}, \code{mlogit}, \code{nls},
-#' \code{polr}, \code{rlm}, \code{lavaan} objects.
+#' \code{polr}, \code{rlm}, \code{lavaan}, \code{vglm}, and \code{mirt} objects.
 #'
 #' @param x a model object
 #' @param \dots arguments passed to specific methods
 #'
+#' @author Ed Merkle, Dongjun You, and Lennart Schneider
+#' 
 #' @return An object of class \code{numeric} containing individuals' contributions to the log-likelihood.  The sum of these contributions equals the model log-likelihood.
 #'
 #' @examples
@@ -396,7 +398,13 @@ llcont.lavaan <- function(x, ...){
       lavInspect(x, "options")$se != "standard"){
       stop("nonnest2 only works for lavaan models fit via ML\n  (assuming multivariate normality, with no robust SEs).")
   }
-  if (lavInspect(x, "options")$missing != "ml"){
+  mispatts <- lavInspect(x, "patterns")
+  if(class(mispatts) == "list"){
+    npatts <- max(sapply(mispatts, nrow))
+  } else {
+    npatts <- nrow(mispatts)
+  }
+  if (lavInspect(x, "options")$missing != "ml" & npatts > 1){
       stop("nonnest2 does not work with pairwise/listwise deletion.\n  refit the model with missing='ml'.")
   }
   samplestats <- x@SampleStats
@@ -462,9 +470,17 @@ llcont.vglm <- function(x, ...){
 }
 
 ########################################################################
-## individual log-likelihood of SingleGroupClass objects (mirt function)
+## individual log-likelihood of MultipleGroupClass objects (mirt function)
 ########################################################################
-##llcont.SingleGroupClass <- function(x, ...)
-##{
-##  sum(x@Data$Freq[[1L]] * log(x@Pl))
-##}
+#' @export
+llcont.MultipleGroupClass <- function(x, ...) {
+  llcont <- log(unlist(mapply(rep, x@Internals$Pl, x@Data$Freq,
+    SIMPLIFY = FALSE)))
+  return(llcont)
+}
+
+#' @export
+llcont.SingleGroupClass <- function(x, ...) {
+  llcont <- log(rep(x@Internals$Pl, x@Data$Freq[[1]]))
+  return(llcont)
+}

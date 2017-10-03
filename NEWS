@@ -3,6 +3,8 @@ Changes in Version 0.5
     o lavaan changes: allow for inclusion of completely missing 
       cases and stop if missing = "listwise" or "pairwise"
 
+    o include llcont() method for mirt objects (credit to Lennart Schneider)
+
 Changes in Version 0.4
 
     o Update handling of missing data to conform to lavaan 0.5-21.

@@ -60,6 +60,7 @@
 #' }
 #'
 #' @importFrom stats AIC var qnorm
+#' @importFrom mirt extract.mirt
 #' @export
 icci <- function(object1, object2, conf.level=.95) {
   classA <- class(object1)[1L]
@@ -75,13 +76,23 @@ icci <- function(object1, object2, conf.level=.95) {
   n <- NROW(llA) - nmis
   omega.hat.2 <- (n-1)/n * var(llA - llB, na.rm = TRUE)
 
-  ## BIC is computed like this because hurdle, zeroinfl, mlogit
-  ## don't have an nobs() method
-  bicA <- AIC(object1, k = log(NROW(estfun(object1))))
-  bicB <- AIC(object2, k = log(NROW(estfun(object2))))
+  if(classA %in% c("SingleGroupClass", "MultipleGroupClass")){
+    bicA <- mirt::extract.mirt(object1, "BIC")
+    aicA <- mirt::extract.mirt(object1, "AIC")
+  } else {
+    ## BIC is computed like this because hurdle, zeroinfl, mlogit
+    ## don't have an nobs() method
+    bicA <- AIC(object1, k = log(NROW(estfun(object1))))
+    aicA <- AIC(object1)
+  }
 
-  aicA <- AIC(object1)
-  aicB <- AIC(object2)
+  if(classB %in% c("SingleGroupClass", "MultipleGroupClass")){
+    bicB <- mirt::extract.mirt(object2, "BIC")
+    aicA <- mirt::extract.mirt(object2, "AIC")
+  } else {
+    bicB <- AIC(object2, k = log(NROW(estfun(object2))))
+    aicB <- AIC(object2)
+  }
 
   bicdiff <- bicA - bicB
   aicdiff <- aicA - aicB

@@ -81,8 +81,24 @@
 vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
   classA <- class(object1)[1L]
   classB <- class(object2)[1L]
-  callA <- if (isS4(object1)) object1@call else object1$call
-  callB <- if (isS4(object2)) object2@call else object2$call
+  
+  if(isS4(object1)){
+    if(classA %in% c("SingleGroupClass", "MultipleGroupClass")){
+      callA <- object1@Call
+      ## recommended vcov type for mirt models:
+      if(object1@Options$SE.type != "Oakes") warning("SE.type='Oakes' is recommended for mirt models")
+    } else {
+      callA <- object1@call
+    }
+  }
+  if(isS4(object2)){
+    if(classB %in% c("SingleGroupClass", "MultipleGroupClass")){
+      callB <- object2@Call
+      if(object2@Options$SE.type != "Oakes") warning("SE.type='Oakes' is recommended for mirt models")
+    } else {
+      callB <- object2@call
+    }
+  }
 
   llA <- llcont(object1)
   llB <- llcont(object2)
@@ -185,6 +201,8 @@ calcAB <- function(object, n){
     #}
   } else {
     tmpvc <- vcov(object)
+    ## in case mirt vcov was not estimated
+    if(nrow(tmpvc) == 1 & is.na(tmpvc[1,1])) stop("Please re-estimate the mirt model with SE=TRUE")
   }
   A <- chol2inv(chol(n * tmpvc))
 
@@ -267,5 +285,5 @@ print.vuongtest <- function(x, ...) {
 
 
 .onAttach <- function(...) {
-  packageStartupMessage("This is nonnest2 0.4\n nonnest2 has not been tested with all combinations of model classes.")
+  packageStartupMessage("This is nonnest2 0.5.\n nonnest2 has not been tested with all combinations of model classes.")
 }
