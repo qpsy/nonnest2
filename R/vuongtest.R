@@ -90,6 +90,8 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
     } else {
       callA <- object1@call
     }
+  } else {
+    callA <- object1$call
   }
   if(isS4(object2)){
     if(classB %in% c("SingleGroupClass", "MultipleGroupClass")){
@@ -98,6 +100,8 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
     } else {
       callB <- object2@call
     }
+  } else {
+    callB <- object2$call
   }
 
   llA <- llcont(object1)
@@ -114,6 +118,9 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
           tmp <- llA
           llA <- llB
           llB <- tmp
+          tmp <- callA
+          callA <- callB
+          callB <- tmp
       }
   }
 
@@ -137,13 +144,22 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
 
   ## Adjustments to test statistics
   ## FIXME lavaan equality constraints; use df instead?
+  if(classA %in% c("SingleGroupClass", "MultipleGroupClass")){
+    nparA <- mirt::extract.mirt(object1, "nest")
+  } else {
+    nparA <- length(coef(object1))
+  }
+  if(classB %in% c("SingleGroupClass", "MultipleGroupClass")){
+    nparB <- mirt::extract.mirt(object2, "nest")
+  } else {
+    nparB <- length(coef(object2))
+  }
+  
   if(adj=="aic"){
-    teststat <- teststat - (length(coef(object1)) -
-                              length(coef(object2)))
+    teststat <- teststat - (nparA - nparB)
   }
   if(adj=="bic"){
-    teststat <- teststat -
-      (length(coef(object1)) - length(coef(object2))) * log(n)/2
+    teststat <- teststat - (nparA - nparB) * log(n)/2
   }
 
   ## Null distribution and test stat depend on nested

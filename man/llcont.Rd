@@ -21,7 +21,7 @@ Obtain log-likelihood values associated with individual observations, evaluated 
 This is a S3 generic function.
 Currently, the method is defined for \code{lm}, \code{glm}, \code{glm.nb},
 \code{clm}, \code{hurdle}, \code{zeroinfl}, \code{mlogit}, \code{nls},
-\code{polr}, \code{rlm}, \code{lavaan} objects.
+\code{polr}, \code{rlm}, \code{lavaan}, \code{vglm}, and \code{mirt} objects.
 }
 \examples{
 ## Fit gamma glm, check that sum of llcont() equals
@@ -33,5 +33,8 @@ gam1 <- glm(lot1 ~ log(u), data = clotting, family = Gamma)
 sum(llcont(gam1))
 logLik(gam1)
 
+}
+\author{
+Ed Merkle, Dongjun You, and Lennart Schneider
 }
 
