@@ -474,13 +474,23 @@ llcont.vglm <- function(x, ...){
 ########################################################################
 #' @export
 llcont.MultipleGroupClass <- function(x, ...) {
-  llcont <- log(unlist(mapply(rep, x@Internals$Pl, x@Data$Freq,
-    SIMPLIFY = FALSE)))
+  dat <- apply(x@Data$data, 1, paste, collapse = "")
+  tab <- apply(x@Data$tabdata, 1, paste, collapse = "")
+  ind <- match(dat, tab)
+  g  <- x@Data$group
+  gN <- x@Data$groupNames
+  llcont <- numeric(length(g))
+  for(a in seq_along(gN)) {
+    llcont[g == gN[a]] <- log(x@Internals$Pl[[a]][ind[g == gN[[a]]]])
+  }
   return(llcont)
 }
 
 #' @export
 llcont.SingleGroupClass <- function(x, ...) {
-  llcont <- log(rep(x@Internals$Pl, x@Data$Freq[[1]]))
+  dat <- apply(x@Data$data, 1, paste, collapse = "")
+  tab <- apply(x@Data$tabdata, 1, paste, collapse = "")
+  ind <- match(dat, tab)
+  llcont <- log(x@Internals$Pl[ind])
   return(llcont)
 }
