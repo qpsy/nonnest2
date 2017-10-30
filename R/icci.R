@@ -64,8 +64,28 @@
 icci <- function(object1, object2, conf.level=.95) {
   classA <- class(object1)[1L]
   classB <- class(object2)[1L]
-  callA <- if (isS4(object1)) object1@call else object1$call
-  callB <- if (isS4(object2)) object2@call else object2$call
+  
+  if(isS4(object1)){
+    if(classA %in% c("SingleGroupClass", "MultipleGroupClass")){
+      callA <- object1@Call
+      ## recommended vcov type for mirt models:
+      if(object1@Options$SE.type != "Oakes") warning("SE.type='Oakes' is recommended for mirt models")
+    } else {
+      callA <- object1@call
+    }
+  } else {
+    callA <- object1$call
+  }
+  if(isS4(object2)){
+    if(classB %in% c("SingleGroupClass", "MultipleGroupClass")){
+      callB <- object2@Call
+      if(object2@Options$SE.type != "Oakes") warning("SE.type='Oakes' is recommended for mirt models")
+    } else {
+      callB <- object2@call
+    }
+  } else {
+    callB <- object2$call
+  }
 
   llA <- llcont(object1)
   llB <- llcont(object2)
@@ -87,7 +107,7 @@ icci <- function(object1, object2, conf.level=.95) {
 
   if(classB %in% c("SingleGroupClass", "MultipleGroupClass")){
     bicB <- mirt::extract.mirt(object2, "BIC")
-    aicA <- mirt::extract.mirt(object2, "AIC")
+    aicB <- mirt::extract.mirt(object2, "AIC")
   } else {
     bicB <- AIC(object2, k = log(NROW(estfun(object2))))
     aicB <- AIC(object2)
