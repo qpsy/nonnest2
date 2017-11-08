@@ -1,9 +1,13 @@
 Package: nonnest2
 Title: Tests of Non-Nested Models
 Version: 0.5
-Date: 2017-10-02
-Author: Edgar Merkle, Dongjun You, and Lennart Schneider
-Maintainer: Edgar Merkle <merklee@missouri.edu>
+Date: 2017-10-08
+Authors@R: c(person(given = "Edgar", family = "Merkle",
+                    role = c("aut","cre"), email = "merklee@missouri.edu"),
+             person(given = "Dongjun", family = "You", role = "aut"),
+             person(given = "Lennart", family = "Schneider", role = "ctb"),
+             person(given = "Seongho", family = "Bae", role = "ctb")
+            )
 Description: Testing non-nested models via theory supplied by Vuong (1989) <DOI:10.2307/1912557>.
     Includes tests of model distinguishability and of model fit that can be applied
     to both nested and non-nested models. Also includes functionality to obtain
