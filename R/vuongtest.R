@@ -225,6 +225,8 @@ calcAB <- function(object, n){
   ## Eq (2.2)
   if(class(object)[1] == "lavaan"){
     sc <- estfun(object, remove.duplicated=TRUE)
+  } else if (class(object)[1] %in% c("SingleGroupClass", "MultipleGroupClass")){
+    sc <- mirt::estfun.AllModelClass(object)
   } else {
     sc <- estfun(object)
   }
