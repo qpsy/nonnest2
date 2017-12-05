@@ -204,7 +204,7 @@ calcAB <- function(object, n){
   if(class(object)[1] == "lavaan"){
     tmpvc <- vcov(object)
     dups <- duplicated(colnames(tmpvc))
-    tmpvc <- tmpvc[!dups,!dups]
+    tmpvc <- n * tmpvc[!dups,!dups]
     ## to throw error if complex constraints
     ## (NB we should eventually just use this instead of dups)
     if(nrow(object@Model@ceq.JAC) > 0){
@@ -215,18 +215,28 @@ calcAB <- function(object, n){
     #} else {
     #  A <- vcov(object)
     #}
+  } else if(class(object) %in% c("lm", "glm", "nls")){
+    scaling <- summary(object)$sigma
+    if(is.null(scaling)){
+      scaling <- 1
+    } else {
+      scaling <- scaling^2
+    }
+    tmpvc <- n * vcov(object)
   } else {
-    tmpvc <- vcov(object)
+    tmpvc <- n * vcov(object)
     ## in case mirt vcov was not estimated
     if(nrow(tmpvc) == 1 & is.na(tmpvc[1,1])) stop("Please re-estimate the mirt model with SE=TRUE")
   }
-  A <- chol2inv(chol(n * tmpvc))
+  A <- chol2inv(chol(tmpvc))
 
   ## Eq (2.2)
   if(class(object)[1] == "lavaan"){
     sc <- estfun(object, remove.duplicated=TRUE)
   } else if (class(object)[1] %in% c("SingleGroupClass", "MultipleGroupClass")){
     sc <- mirt::estfun.AllModelClass(object)
+  } else if(class(object) %in% c("lm", "glm", "nls")){
+    sc <- (1/scaling) * estfun(object)
   } else {
     sc <- estfun(object)
   }
