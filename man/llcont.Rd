@@ -37,4 +37,3 @@ logLik(gam1)
 \author{
 Ed Merkle, Dongjun You, and Lennart Schneider
 }
-

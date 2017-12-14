@@ -18,13 +18,13 @@ Depends:
 Imports:
     CompQuadForm,
     mvtnorm,
-    lavaan (>= 0.5-21),
+    lavaan (>= 0.5-23.1097),
     sandwich
 License: GPL-2 | GPL-3
 LazyData: yes
 Suggests:
     knitr,
-    mirt,
+    mirt (>= 1.26.3),
     testthat
 VignetteBuilder: knitr
-RoxygenNote: 5.0.1
+RoxygenNote: 6.0.1

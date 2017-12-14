@@ -64,12 +64,11 @@ icci(fit1, fit2)
 }
 
 }
-\author{
-Ed Merkle and Dongjun You
-}
 \references{
 Vuong, Q. H. (1989).  Likelihood ratio tests for model selection and non-nested hypotheses.  \emph{Econometrica, 57}, 307-333. <DOI:10.2307/1912557>
 
 Merkle, E. C., You, D., & Preacher, K. (2016). Testing non-nested structural equation models.  \emph{Psychological Methods, 21}, 151-163. <DOI:10.1037/met0000038>
 }
-
+\author{
+Ed Merkle and Dongjun You
+}

@@ -79,31 +79,12 @@
 #' @importMethodsFrom lavaan coef fitted logLik vcov
 #' @export
 vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
-  classA <- class(object1)[1L]
-  classB <- class(object2)[1L]
-  
-  if(isS4(object1)){
-    if(classA %in% c("SingleGroupClass", "MultipleGroupClass")){
-      callA <- object1@Call
-      ## recommended vcov type for mirt models:
-      if(object1@Options$SE.type != "Oakes") warning("SE.type='Oakes' is recommended for mirt models")
-    } else {
-      callA <- object1@call
-    }
-  } else {
-    callA <- object1$call
-  }
-  if(isS4(object2)){
-    if(classB %in% c("SingleGroupClass", "MultipleGroupClass")){
-      callB <- object2@Call
-      if(object2@Options$SE.type != "Oakes") warning("SE.type='Oakes' is recommended for mirt models")
-    } else {
-      callB <- object2@call
-    }
-  } else {
-    callB <- object2$call
-  }
 
+  ## check objects, issue warnings/errors, get classes/calls
+  obinfo <- check.obj(object1, object2)
+  callA <- obinfo$callA; classA <- obinfo$classA
+  callB <- obinfo$callB; classB <- obinfo$classB
+    
   llA <- llcont(object1)
   llB <- llcont(object2)
 
@@ -311,6 +292,46 @@ print.vuongtest <- function(x, ...) {
   }
 }
 
+###################################################################
+## check objects prior to doing computations and possibly warn/stop
+## also return calls/classes
+###################################################################
+check.obj <- function(object1, object2) {
+  classA <- class(object1)[1L]
+  classB <- class(object2)[1L]
+  
+  if(isS4(object1)){
+    if(classA %in% c("SingleGroupClass", "MultipleGroupClass")){
+      callA <- object1@Call
+      ## recommended vcov type for mirt models:
+      if(object1@Options$SE.type != "Oakes") warning("SE.type='Oakes' is recommended for mirt models")
+    } else {
+      callA <- object1@call
+    }
+  } else {
+    callA <- object1$call
+  }
+  if(isS4(object2)){
+    if(classB %in% c("SingleGroupClass", "MultipleGroupClass")){
+      callB <- object2@Call
+      if(object2@Options$SE.type != "Oakes") warning("SE.type='Oakes' is recommended for mirt models")
+    } else {
+      callB <- object2@call
+    }
+  } else {
+    callB <- object2$call
+  }
+
+  if(class(object1) == "lavaan"){
+    if(lavInspect(object1, 'fixed.x')) stop("lavaan models with fixed.x are not currently supported")
+  }
+  if(class(object2) == "lavaan"){
+    if(lavInspect(object2, 'fixed.x')) stop("lavaan models with fixed.x are not currently supported")
+  }
+
+  list(classA = classA, classB = classB, callA = callA, callB = callB)
+}  
+  
 
 .onAttach <- function(...) {
   packageStartupMessage("This is nonnest2 0.5.\n nonnest2 has not been tested with all combinations of model classes.")

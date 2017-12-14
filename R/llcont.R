@@ -399,7 +399,7 @@ llcont.lavaan <- function(x, ...){
       stop("nonnest2 only works for lavaan models fit via ML\n  (assuming multivariate normality, with no robust SEs).")
   }
   mispatts <- lavInspect(x, "patterns")
-  if(class(mispatts) == "list"){
+  if(any(class(mispatts) == "list")){
     npatts <- max(sapply(mispatts, nrow))
   } else {
     npatts <- nrow(mispatts)
