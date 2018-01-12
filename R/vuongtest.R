@@ -322,13 +322,6 @@ check.obj <- function(object1, object2) {
     callB <- object2$call
   }
 
-  if(class(object1) == "lavaan"){
-    if(lavInspect(object1, 'fixed.x')) stop("lavaan models with fixed.x are not currently supported")
-  }
-  if(class(object2) == "lavaan"){
-    if(lavInspect(object2, 'fixed.x')) stop("lavaan models with fixed.x are not currently supported")
-  }
-
   list(classA = classA, classB = classB, callA = callA, callB = callB)
 }  
   

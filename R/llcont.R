@@ -409,7 +409,7 @@ llcont.lavaan <- function(x, ...){
   }
   samplestats <- x@SampleStats
   ntab <- lavInspect(x, "nobs")
-  llvec <- rep(NA, lavInspect(x, "ntotal"))
+  llvec <- rep(NA, lavInspect(x, "norig"))
   ngroups <- lavInspect(x, "ngroups")
 
   for(g in 1:ngroups) {
@@ -432,6 +432,28 @@ llcont.lavaan <- function(x, ...){
         Mu.hat <- apply(x@Data@X[[g]], 2, mean)
       }
       llvec[grpind] <- dmvnorm(x@Data@X[[g]], Mu.hat, Sigma.hat, log=TRUE)
+
+      ## subtract logl.X
+      x.idx <- samplestats@x.idx[[g]]
+      if(!is.null(x.idx) && length(x.idx) > 0L){
+        Mu.X <- samplestats@mean.x[[g]]
+        Sigma.X <- samplestats@cov.x[[g]]
+        if(is.null(Mu.X)){
+          Mu.X <- Mu.hat[x.idx]
+        }
+        if(is.null(Sigma.X)){
+          Sigma.X <- Sigma.hat[x.idx, x.idx, drop=FALSE]
+        }
+
+        if(length(x.idx) == 1){
+          tmpll.x <- dnorm(x@Data@X[[g]][,x.idx], Mu.X, sqrt(Sigma.X), log=TRUE)
+        } else {
+          tmpll.x <- dmvnorm(x@Data@X[[g]][,x.idx], Mu.X, Sigma.X, log=TRUE)
+        }
+        if(inherits(tmpll.x, "try-error")) tmpll.x <- NA
+        llvec[grpind] <- llvec[grpind] - tmpll.x
+      }
+      
     } else { # incomplete data
       nsub <- ntab[g]
       M <- samplestats@missing[[g]]
@@ -453,11 +475,32 @@ llcont.lavaan <- function(x, ...){
         } else {
           tmpll[case.idx] <- dmvnorm(X, Mu.hat[var.idx], Sigma.hat[var.idx, var.idx], log=TRUE)
         }
+
+        ## subtract logl.X
+        x.idx <- samplestats@x.idx[[g]]
+        obsx <- which(x.idx %in% var.idx)
+        x.idx <- x.idx[obsx]
+        if(!is.null(x.idx) && length(x.idx) > 0L){
+          Mu.X <- Mu.hat[x.idx]
+          Sigma.X <- Sigma.hat[x.idx, x.idx, drop=FALSE]
+
+          if(length(x.idx) == 1){
+            tmpll.x <- dnorm(x@Data@X[[g]][,x.idx], Mu.X, sqrt(Sigma.X), log=TRUE)
+          } else {
+            tmpll.x <- dmvnorm(X[,x.idx], Mu.X, Sigma.X, log=TRUE)
+          }
+          if(inherits(tmpll.x, "try-error")) tmpll.x <- NA
+          tmpll[case.idx] <- tmpll[case.idx] - tmpll.x
+        }
       }
 
       llvec[grpind] <- tmpll
     } # incomplete
   } # group
+  ## remove obs with no variables
+  obsidx <- unlist(lavInspect(x, 'case.idx'))
+  llvec <- llvec[obsidx]
+  
   llvec
 }
 
