@@ -409,7 +409,7 @@ llcont.lavaan <- function(x, ...){
   }
   samplestats <- x@SampleStats
   ntab <- lavInspect(x, "nobs")
-  llvec <- rep(NA, lavInspect(x, "norig"))
+  llvec <- rep(NA, sum(lavInspect(x, "norig")))
   ngroups <- lavInspect(x, "ngroups")
 
   for(g in 1:ngroups) {
