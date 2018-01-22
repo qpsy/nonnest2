@@ -1,3 +1,6 @@
+Changes in Version 0.5-1
+    o llcont() for lavaan objects with fixed.x=TRUE is corrected
+
 Changes in Version 0.5
 
     o include llcont() method for mirt objects (credit to Lennart Schneider)
