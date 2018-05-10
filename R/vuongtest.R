@@ -24,6 +24,12 @@
 #' @param object2 a model object
 #' @param nested if \code{TRUE}, models are assumed to be nested
 #' @param adj Should an adjusted test statistic be calculated?  Defaults to \dQuote{none}, with possible adjustments being \dQuote{aic} and \dQuote{bic}
+#' @param ll1 an optional function for computing log-likelihood contributions of object1
+#' @param ll2 an optional function for computing log-likelihood contributions of object2
+#' @param score1 an optional function for computing scores of object 1
+#' @param score2 an optional function for computing scores of object 2
+#' @param vc1 an optional function for computing the asymptotic covariance matrix of the object1 parameters
+#' @param vc2 an optional function for computing the asymptotic covariance matrix of the object2 parameters
 #'
 #' @author Ed Merkle and Dongjun You
 #'
@@ -78,15 +84,15 @@
 #' @importFrom stats coef pnorm var vcov
 #' @importMethodsFrom lavaan coef fitted logLik vcov
 #' @export
-vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
+vuongtest <- function(object1, object2, nested=FALSE, adj="none", ll1=llcont, ll2=llcont, score1=NULL, score2=NULL, vc1=vcov, vc2=vcov) {
 
   ## check objects, issue warnings/errors, get classes/calls
   obinfo <- check.obj(object1, object2)
   callA <- obinfo$callA; classA <- obinfo$classA
   callB <- obinfo$callB; classB <- obinfo$classB
     
-  llA <- llcont(object1)
-  llB <- llcont(object2)
+  llA <- ll1(object1)
+  llB <- ll2(object2)
 
   ## If nested==TRUE, decide which is the full model by seeing
   ## which has the larger log-likelihood.  From here on,
@@ -111,7 +117,7 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
   omega.hat.2 <- (n-1)/n * var(llA - llB, na.rm = TRUE)
 
   ## Get p-value of weighted chi-square dist
-  lamstar <- calcLambda(object1, object2, n)
+  lamstar <- calcLambda(object1, object2, n, score1, score2, vc1, vc2)
 
   ## Note: dr package requires non-negative weights, which
   ##       does not help when nested==TRUE
@@ -180,43 +186,45 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none") {
 ################################################################
 ## A, B as defined in Vuong Eq (2.1) and (2.2)
 ################################################################
-calcAB <- function(object, n){
+calcAB <- function(object, n, scfun, vc){
   ## Eq (2.1)
   if(class(object)[1] == "lavaan"){
-    tmpvc <- vcov(object)
+    tmpvc <- vc(object)
     dups <- duplicated(colnames(tmpvc))
     tmpvc <- n * tmpvc[!dups,!dups]
     ## to throw error if complex constraints
     ## (NB we should eventually just use this instead of dups)
     if(nrow(object@Model@ceq.JAC) > 0){
-      vcerr <- vcov(object, remove.duplicated=TRUE)
+      vcerr <- vc(object, remove.duplicated=TRUE)
     }
     #if(nrow(object@Model@ceq.JAC) > 0){
     #  A <- vcov(object, remove.duplicated=TRUE)
     #} else {
     #  A <- vcov(object)
     #}
-  } else if(class(object) %in% c("lm", "glm", "nls")){
+  } else if(class(object)[1] %in% c("lm", "glm", "nls")){
     scaling <- summary(object)$sigma
     if(is.null(scaling)){
       scaling <- 1
     } else {
       scaling <- scaling^2
     }
-    tmpvc <- n * vcov(object)
+    tmpvc <- n * vc(object)
   } else {
-    tmpvc <- n * vcov(object)
+    tmpvc <- n * vc(object)
     ## in case mirt vcov was not estimated
     if(nrow(tmpvc) == 1 & is.na(tmpvc[1,1])) stop("Please re-estimate the mirt model with SE=TRUE")
   }
   A <- chol2inv(chol(tmpvc))
 
   ## Eq (2.2)
-  if(class(object)[1] == "lavaan"){
+  if(!is.null(scfun)){
+    sc <- scfun(object)
+  } else if(class(object)[1] == "lavaan"){
     sc <- estfun(object, remove.duplicated=TRUE)
   } else if (class(object)[1] %in% c("SingleGroupClass", "MultipleGroupClass")){
     sc <- mirt::estfun.AllModelClass(object)
-  } else if(class(object) %in% c("lm", "glm", "nls")){
+  } else if(class(object)[1] %in% c("lm", "glm", "nls")){
     sc <- (1/scaling) * estfun(object)
   } else {
     sc <- estfun(object)
@@ -237,9 +245,9 @@ calcBcross <- function(sc1, sc2, n){
 ################################################################
 ## Calculating W, Vuong Eq (3.6)
 ################################################################
-calcLambda <- function(object1, object2, n) {
-  AB1 <- calcAB(object1, n)
-  AB2 <- calcAB(object2, n)
+calcLambda <- function(object1, object2, n, score1, score2, vc1, vc2) {
+  AB1 <- calcAB(object1, n, score1, vc1)
+  AB2 <- calcAB(object2, n, score2, vc2)
   Bc <- calcBcross(AB1$sc, AB2$sc, n)
 
   W <- cbind(rbind(-AB1$B %*% chol2inv(chol(AB1$A)),

@@ -19,6 +19,8 @@
 #' @param object1 a model object
 #' @param object2 a model object
 #' @param conf.level confidence level of the interval
+#' @param ll1 an optional function for computing log-likelihood contributions of object1
+#' @param ll2 an optional function for computing log-likelihood contributions of object2
 #'
 #' @author Ed Merkle and Dongjun You
 #'
@@ -61,15 +63,15 @@
 #'
 #' @importFrom stats AIC var qnorm
 #' @export
-icci <- function(object1, object2, conf.level=.95) {
+icci <- function(object1, object2, conf.level=.95, ll1=llcont, ll2=llcont) {
 
   ## check objects, issue warnings/errors, get classes/calls
   obinfo <- check.obj(object1, object2)
   callA <- obinfo$callA; classA <- obinfo$classA
   callB <- obinfo$callB; classB <- obinfo$classB
   
-  llA <- llcont(object1)
-  llB <- llcont(object2)
+  llA <- ll1(object1)
+  llB <- ll2(object2)
 
   ## Eq (4.2)
   nmis <- sum(is.na(llA)) # (missing all data)
