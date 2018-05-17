@@ -1,7 +1,7 @@
 Package: nonnest2
 Title: Tests of Non-Nested Models
-Version: 0.5-1
-Date: 2018-01-22
+Version: 0.5-2
+Date: 2018-05-17
 Authors@R: c(person(given = "Edgar", family = "Merkle",
                     role = c("aut","cre"), email = "merklee@missouri.edu"),
              person(given = "Dongjun", family = "You", role = "aut"),
@@ -22,9 +22,15 @@ Imports:
     sandwich
 License: GPL-2 | GPL-3
 LazyData: yes
-Suggests:
-    knitr,
+Suggests:    
     mirt (>= 1.26.3),
+    AER,
+    MASS,
+    faraway,
+    mlogit,
+    ordinal,
+    pscl,
+    knitr,
     testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
