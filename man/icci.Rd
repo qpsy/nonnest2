@@ -4,7 +4,7 @@
 \alias{icci}
 \title{Information Criteria Confidence Intervals}
 \usage{
-icci(object1, object2, conf.level = 0.95)
+icci(object1, object2, conf.level = 0.95, ll1 = llcont, ll2 = llcont)
 }
 \arguments{
 \item{object1}{a model object}
@@ -12,6 +12,10 @@ icci(object1, object2, conf.level = 0.95)
 \item{object2}{a model object}
 
 \item{conf.level}{confidence level of the interval}
+
+\item{ll1}{an optional function for computing log-likelihood contributions of object1}
+
+\item{ll2}{an optional function for computing log-likelihood contributions of object2}
 }
 \value{
 an object of class \code{icci} containing test results.
