@@ -28,7 +28,7 @@ library("nonnest2")
 
 Package **nonnest2** was designed to implement Vuong's (1989) theory of non-nested model comparison for many classes of R models.  It has been tested most thoroughly with structural equation models (of class `lavaan`) and with count regression models (including models of class `glm`, `hurdle`, `zeroinfl`).  Functionality is available for many other classes, including `lm`, `glm.nb`, `clm`, `mlogit`, `nls`, `polr`, and `rlm`.  Users are cautioned that, while we believe the results to be correct for these models (Vuong's theory is generally applicable to models fit via ML), we have not tested all combinations of models.
 
-The package can be installed from [CRAN](http://cran.rstudio.com/package=nonnest2), or the development version is available via github:
+The package can be installed from [CRAN](https://cran.r-project.org/package=nonnest2), or the development version is available via github:
 
 ```{r eval=FALSE}
 install.packages("nonnest2")
