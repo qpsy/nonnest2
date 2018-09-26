@@ -1,3 +1,10 @@
+Changes in Version 0.5-2
+    o new vuongtest() arguments ll1, ll2, score1, score2, vc1, vc2 for
+      sending in custom functions that obtain casewise log-likelihood,
+      scores, and vcovs from fitted models
+
+    o add packages to Suggests, fix a failing test
+
 Changes in Version 0.5-1
     o llcont() for lavaan objects with fixed.x=TRUE is corrected
 
