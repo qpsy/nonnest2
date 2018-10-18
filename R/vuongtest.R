@@ -136,11 +136,10 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none", ll1=llcont, ll
   ## pOmega <- tmp[[4]]
   pOmega <- imhof(n * omega.hat.2, lamstar^2)$Qq
 
-  ## Calculate and test LRT; Eq (6.4)
+  ## Calculate likelihood ratio; Eq (6.4)
   lr <- sum(llA - llB, na.rm = TRUE)
-  teststat <- (1/sqrt(n)) * lr/sqrt(omega.hat.2)
 
-  ## Adjustments to test statistics
+  ## Adjustments to likelihood ratio
   ## FIXME lavaan equality constraints; use df instead?
   if(classA %in% c("SingleGroupClass", "MultipleGroupClass")){
     nparA <- mirt::extract.mirt(object1, "nest")
@@ -154,11 +153,13 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none", ll1=llcont, ll
   }
   
   if(adj=="aic"){
-    teststat <- teststat - (nparA - nparB)
+    lr <- lr - (nparA - nparB)
   }
   if(adj=="bic"){
-    teststat <- teststat - (nparA - nparB) * log(n)/2
+    lr <- lr - (nparA - nparB) * log(n)/2
   }
+
+  teststat <- (1/sqrt(n)) * lr/sqrt(omega.hat.2)
 
   ## Null distribution and test stat depend on nested
   if(nested){
