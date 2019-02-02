@@ -31,6 +31,7 @@ Suggests:
     ordinal,
     pscl,
     knitr,
+    rmarkdown,
     testthat
 VignetteBuilder: knitr
 RoxygenNote: 6.1.0
