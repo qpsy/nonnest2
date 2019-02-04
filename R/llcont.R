@@ -309,30 +309,7 @@ llcont.lm <- function (x, ...) {
 ## Getting log-likelihood of mlogit objects for individual cases
 ################################################################
 #' @export
-llcont.mlogit <- function(x, ...) {
-  model <- x$model
-  arg <- names(as.list(x$call))
-  alt <- attr(model, "index")[["alt"]]
-  categ <- levels(alt)
-  ncateg <- nlevels(alt)
-
-  ## matrix of 'choice' (logical) variable. n by ncateg
-  idx <- matrix(model[ , 1], ncol=ncateg, byrow=TRUE)
-
-  ## the order does not match when NA exists, or 'refleve' is used
-  ## find the first row [ord] without NA, the order of level for 'choice'
-  if (any(is.na(alt)) || is.element("reflevel", arg)) {
-    altm <- matrix(alt, ncol=ncateg, byrow=TRUE)
-    ord <- match(FALSE, apply(altm, 1, function(x) any(is.na(x))) )
-    probabilities <- x$probabilities[ , altm[ord, ]]
-    apply(1 * idx * probabilities, MARGIN=1,
-          function(x) log(sum(x, na.rm=TRUE)))
-
-  } else {
-    apply(1 * idx * x$probabilities, MARGIN=1,
-          function(x) log(sum(x, na.rm=TRUE)))
-  }
-}
+llcont.mlogit <- function(x, ...) log(fitted(x))
 
 ################################################################
 ## Getting log-likelihood of nls objects for individual cases
