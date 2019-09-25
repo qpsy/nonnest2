@@ -234,8 +234,13 @@ calcAB <- function(object, n, scfun, vc){
     sc <- scfun(object)
   } else if(class(object)[1] == "lavaan"){
     sc <- estfun(object, remove.duplicated=TRUE)
-  } else if (class(object)[1] %in% c("SingleGroupClass", "MultipleGroupClass")){
-    sc <- mirt::estfun.AllModelClass(object)
+  } else if(class(object)[1] %in% c("SingleGroupClass", "MultipleGroupClass")){
+    wts <- extract.mirt(object, "survey.weights")
+    if(length(wts) > 0){
+      sc <- mirt::estfun.AllModelClass(object, weights = sqrt(wts))
+    } else {
+      sc <- mirt::estfun.AllModelClass(object)
+    }
   } else if(class(object)[1] %in% c("lm", "glm", "nls")){
     sc <- (1/scaling) * estfun(object)
   } else {
@@ -328,6 +333,11 @@ check.obj <- function(object1, object2) {
     } else {
       callA <- object1@call
     }
+    if(classA == "lavaan"){
+      if(length(object1@Data@weights[[1]]) > 0){
+        stop("lavaan objects with sampling weights are not currently supported")
+      }
+    }
   } else {
     callA <- object1$call
   }
@@ -337,6 +347,11 @@ check.obj <- function(object1, object2) {
       if(object2@Options$SE.type != "Oakes") warning("SE.type='Oakes' is recommended for mirt models")
     } else {
       callB <- object2@call
+    }
+    if(classB == "lavaan"){
+      if(length(object2@Data@weights[[1]]) > 0){
+        stop("lavaan objects with sampling weights are not currently supported")
+      }
     }
   } else {
     callB <- object2$call
