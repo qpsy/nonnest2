@@ -62,7 +62,7 @@ require(lavaan)
 HS.model <- 'visual  =~ x1 + x2 + x3
               textual =~ x4 + x5 + x6
               speed   =~ x7 + x8 + x9 '
-fit1 <- cfa(HS.model, data=HolzingerSwineford1939)
+fit1 <- cfa(HS.model, data=HolzingerSwineford1939, meanstructure=TRUE)
 fit2 <- cfa(HS.model, data=HolzingerSwineford1939, group="school")
 icci(fit1, fit2)
 }
