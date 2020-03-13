@@ -1,7 +1,7 @@
 Package: nonnest2
 Title: Tests of Non-Nested Models
 Version: 0.5-3
-Date: 2018-10-18
+Date: 2020-03-13
 Authors@R: c(person(given = "Edgar", family = "Merkle",
                     role = c("aut","cre"), email = "merklee@missouri.edu"),
              person(given = "Dongjun", family = "You", role = "aut"),
@@ -18,7 +18,7 @@ Depends:
 Imports:
     CompQuadForm,
     mvtnorm,
-    lavaan (>= 0.5-23.1097),
+    lavaan (>= 0.6-3),
     sandwich
 License: GPL-2 | GPL-3
 LazyData: yes
