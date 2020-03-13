@@ -4,9 +4,18 @@
 \alias{vuongtest}
 \title{Vuong Tests for Model Comparison}
 \usage{
-vuongtest(object1, object2, nested = FALSE, adj = "none",
-  ll1 = llcont, ll2 = llcont, score1 = NULL, score2 = NULL,
-  vc1 = vcov, vc2 = vcov)
+vuongtest(
+  object1,
+  object2,
+  nested = FALSE,
+  adj = "none",
+  ll1 = llcont,
+  ll2 = llcont,
+  score1 = NULL,
+  score2 = NULL,
+  vc1 = vcov,
+  vc2 = vcov
+)
 }
 \arguments{
 \item{object1}{a model object}
