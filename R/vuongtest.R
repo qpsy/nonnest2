@@ -94,6 +94,7 @@
 #' @importFrom CompQuadForm imhof
 #' @importFrom stats coef pnorm var vcov
 #' @importMethodsFrom lavaan coef fitted logLik vcov
+#' @importFrom mirt extract.mirt
 #' @export
 vuongtest <- function(object1, object2, nested=FALSE, adj="none", ll1=llcont, ll2=llcont, score1=NULL, score2=NULL, vc1=vcov, vc2=vcov) {
 
