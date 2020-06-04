@@ -385,7 +385,7 @@ llcont.lavaan <- function(x, ...){
       stop("nonnest2 does not work with pairwise/listwise deletion.\n  refit the model with missing='ml'.")
   }
   samplestats <- x@SampleStats
-  ntab <- lavInspect(x, "nobs")
+  ntab <- lavInspect(x, "norig")
   llvec <- rep(NA, sum(lavInspect(x, "norig")))
   ngroups <- lavInspect(x, "ngroups")
 
@@ -475,8 +475,10 @@ llcont.lavaan <- function(x, ...){
     } # incomplete
   } # group
   ## remove obs with no variables
-  obsidx <- unlist(lavInspect(x, 'case.idx'))
-  llvec <- llvec[obsidx]
+  empidx <- unlist(lavInspect(x, 'empty.idx'))
+  if(length(empidx) > 0){
+    llvec <- llvec[-empidx]
+  }
   
   llvec
 }
