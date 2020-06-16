@@ -1,7 +1,7 @@
 Package: nonnest2
 Title: Tests of Non-Nested Models
-Version: 0.5-3
-Date: 2020-03-14
+Version: 0.5-4
+Date: 2020-06-16
 Authors@R: c(person(given = "Edgar", family = "Merkle",
                     role = c("aut","cre"), email = "merklee@missouri.edu"),
              person(given = "Dongjun", family = "You", role = "aut"),
