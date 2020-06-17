@@ -18,7 +18,7 @@ Depends:
 Imports:
     CompQuadForm,
     mvtnorm,
-    lavaan (>= 0.6-3),
+    lavaan (>= 0.6-6),
     sandwich
 License: GPL-2 | GPL-3
 LazyData: yes
@@ -34,4 +34,4 @@ Suggests:
     rmarkdown,
     testthat
 VignetteBuilder: knitr
-RoxygenNote: 7.0.2
+RoxygenNote: 7.1.0
