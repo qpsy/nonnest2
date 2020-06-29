@@ -30,6 +30,26 @@ test_that("lavaan object", {
                   speed   =~ x7 + x8 + x9'
     fit6 <- cfa(HS.model3, data=HolzingerSwineford1939, group="school")
     expect_equal(sum(llcont(fit6)), as.numeric(logLik(fit6)))
+
+    ## a more stringent test with missing, fixed.x, empty case:
+    set.seed(1234)
+    pop.model <- ' f =~ 0.7*y1 + 0.7*y2 + 0.7*y3 + 0.7*y4 + 0.7*y5
+                   f ~ (-2.3)*x1 + 0.8*x2
+                   y1 ~ 0.2*x2 
+                   y3 ~ 0.7*x1 '
+    Data <- simulateData(pop.model, sample.nobs=100)
+
+    model <- ' f =~ y1 + y2 + y3 + y4 + y5
+               f ~ x1 + x2
+               y1 ~ x2
+               y3 ~ x1 '
+
+    obs <- rbinom(prod(dim(Data)), 1, .9)
+    Data <- Data*obs
+    Data[Data==0] <- NA
+    Data[95,] <- NA
+    fit7 <- sem(model, data=Data, fixed.x=TRUE, meanstructure=TRUE, missing='ml')
+    expect_equal(sum(llcont(fit7)), as.numeric(logLik(fit7)))
   }
 })
 

@@ -375,6 +375,7 @@ llcont.lavaan <- function(x, ...){
       lavInspect(x, "options")$se != "standard"){
       stop("nonnest2 only works for lavaan models fit via ML\n  (assuming multivariate normality, with no robust SEs).")
   }
+  if(tolower(lavInspect(x, "options")$missing) == "ml.x") stop("cannot handle lavaan models with missing='ml.x'. consider using missing='ml'.")
   mispatts <- lavInspect(x, "patterns")
   if(any(class(mispatts) == "list")){
     npatts <- max(sapply(mispatts, nrow))
@@ -439,7 +440,7 @@ llcont.lavaan <- function(x, ...){
 
       Mu.hat <- unclass(moments$mean)
       nvar <- ncol(moments$cov)
-
+      
       for(p in 1:length(M)) {
         ## Data
         case.idx <- Mp$case.idx[[p]]
@@ -455,30 +456,34 @@ llcont.lavaan <- function(x, ...){
 
         ## subtract logl.X
         x.idx <- samplestats@x.idx[[g]]
-        obsx <- which(x.idx %in% var.idx)
+        obsx <- which(x.idx %in% which(var.idx))
+        varnums <- rep(NA, length(var.idx))
+        varnums[var.idx] <- seq(1, sum(var.idx))
         x.idx <- x.idx[obsx]
+        x.dat.idx <- varnums[x.idx[obsx]]
         if(!is.null(x.idx) && length(x.idx) > 0L){
           Mu.X <- Mu.hat[x.idx]
           Sigma.X <- Sigma.hat[x.idx, x.idx, drop=FALSE]
 
           if(length(x.idx) == 1){
-            tmpll.x <- dnorm(x@Data@X[[g]][,x.idx], Mu.X, sqrt(Sigma.X), log=TRUE)
+            tmpll.x <- dnorm(X[,x.dat.idx], Mu.X, sqrt(Sigma.X), log=TRUE)
           } else {
-            tmpll.x <- dmvnorm(X[,x.idx], Mu.X, Sigma.X, log=TRUE)
+            tmpll.x <- try(dmvnorm(X[,x.dat.idx], Mu.X, Sigma.X, log=TRUE))
           }
           if(inherits(tmpll.x, "try-error")) tmpll.x <- NA
           tmpll[case.idx] <- tmpll[case.idx] - tmpll.x
         }
       }
 
-      llvec[grpind] <- tmpll
+      ## needs to account for exclusion due to missing fixed.x, and due to empty
+      miscid <- unlist(Mp$case.idx)
+      miscid <- miscid[order(miscid)]
+      llvec[grpind[miscid]] <- tmpll[miscid]
     } # incomplete
   } # group
-  ## remove obs with no variables
-  empidx <- unlist(lavInspect(x, 'empty.idx'))
-  if(length(empidx) > 0){
-    llvec <- llvec[-empidx]
-  }
+  ## include only cases that were in the model
+  useidx <- unlist(lavInspect(x, 'case.idx'))
+  llvec <- llvec[useidx]
   
   llvec
 }
