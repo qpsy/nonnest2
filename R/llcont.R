@@ -484,6 +484,11 @@ llcont.lavaan <- function(x, ...){
   ## include only cases that were in the model
   useidx <- unlist(lavInspect(x, 'case.idx'))
   llvec <- llvec[useidx]
+
+  if(length(llvec) != sum(unlist(lavInspect(x, 'nobs')))){
+    llvec <- llvec[!is.na(llvec)]
+    if(length(llvec) != sum(unlist(lavInspect(x, 'nobs')))) warning("nonnest2 warning: problem with llcont(), likely due to missing data.")
+  }
   
   llvec
 }
