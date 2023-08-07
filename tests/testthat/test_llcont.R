@@ -346,9 +346,9 @@ test_that("rlm object", {
 test_that("OpenMx object", {
   if (isTRUE(require("OpenMx")) & isTRUE(require("tidySEM"))) {
     
-    df <- data_mix_ordinal
-    df[1:4] <- lapply(df, ordered)
-    res <- mx_lca(data = df, classes = 1:2, run = F)
+    dfr <- data_mix_ordinal
+    dfr[1:4] <- lapply(dfr, ordered)
+    res <- mx_lca(data = dfr, classes = 1:2, run = F)
     
     res[[1]]$fitfunction$rowDiagnostics <- TRUE
     

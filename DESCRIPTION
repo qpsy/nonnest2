@@ -22,7 +22,6 @@ Imports:
     lavaan (>= 0.6-6),
     sandwich
 License: GPL-2 | GPL-3
-LazyData: yes
 Suggests: 
     mirt (>= 1.26.3),
     AER,
@@ -35,5 +34,5 @@ Suggests:
     rmarkdown,
     testthat
 VignetteBuilder: knitr
-RoxygenNote: 7.1.1
+RoxygenNote: 7.2.3
 Encoding: UTF-8
