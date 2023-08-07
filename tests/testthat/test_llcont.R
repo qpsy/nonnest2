@@ -350,10 +350,10 @@ test_that("OpenMx object", {
     df[1:4] <- lapply(df, ordered)
     res <- mx_lca(data = df, classes = 1:2, run = F)
     
-    res[[1]]$fitfunction$rowDiagnostics <- T 
+    res[[1]]$fitfunction$rowDiagnostics <- TRUE
     
-    res[[2]]$class1$fitfunction$rowDiagnostics <- T
-    res[[2]]$class2$fitfunction$rowDiagnostics <- T
+    res[[2]]$class1$fitfunction$rowDiagnostics <- TRUE
+    res[[2]]$class2$fitfunction$rowDiagnostics <- TRUE
     
     res[[1]] <- mxTryHardOrdinal(res[[1]])
     res[[2]] <- mxTryHardOrdinal(res[[2]])

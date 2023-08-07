@@ -539,7 +539,7 @@ llcont.MxModel <- function(x){
   if(is.null(wgts)){
     ls <- attr(mxEval(fitfunction, x), 'likelihoods')
     if(is.null(ls)){
-      stop("The row LL has not been save, check that rowDiagnostics = TRUE")
+      stop("The row LL has not been saved, check that rowDiagnostics = TRUE")
     }else{lls <- log(ls)}
     
   }else{
@@ -548,7 +548,7 @@ llcont.MxModel <- function(x){
     for(j in 1:length(nms)){
       temp <- x@submodels[[nms[j]]]$fitfunction$result*wgts[j]
       if(is.null(temp)){
-        stop("The row LL has not been save, check that rowDiagnostics = TRUE")
+        stop("The row LL has not been saved, check that rowDiagnostics = TRUE")
       }else{
         ll_temp <- do.call(cbind, list(ll_temp, temp))
       }
