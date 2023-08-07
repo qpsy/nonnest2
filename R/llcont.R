@@ -5,12 +5,12 @@
 #' This is a S3 generic function.
 #' Currently, the method is defined for \code{lm}, \code{glm}, \code{glm.nb},
 #' \code{clm}, \code{hurdle}, \code{zeroinfl}, \code{mlogit}, \code{nls},
-#' \code{polr}, \code{rlm}, \code{lavaan}, \code{vglm}, and \code{mirt} objects.
+#' \code{polr}, \code{rlm}, \code{lavaan}, \code{vglm}, \code{mirt}, and \code{OpenMx} objects.
 #'
 #' @param x a model object
 #' @param \dots arguments passed to specific methods
 #'
-#' @author Ed Merkle, Dongjun You, and Lennart Schneider
+#' @author Ed Merkle, Dongjun You, Lennart Schneider, and Mauricio Garnier-Villarreal
 #' 
 #' @return An object of class \code{numeric} containing individuals' contributions to the log-likelihood.  The sum of these contributions equals the model log-likelihood.
 #'
@@ -526,3 +526,37 @@ llcont.SingleGroupClass <- function(x, ...) {
   llcont <- log(x@Internals$Pl[ind])
   return(llcont)
 }
+
+
+################################################################
+## Getting log-likelihood of OpenMx objects for individual cases
+################################################################
+#' @export
+llcont.MxModel <- function(x){
+
+  wgts <- x$expectation$output$weights
+  
+  if(is.null(wgts)){
+    ls <- attr(mxEval(fitfunction, x), 'likelihoods')
+    if(is.null(ls)){
+      stop("The row LL has not been save, check that rowDiagnostics = TRUE")
+    }else{lls <- log(ls)}
+    
+  }else{
+    nms <- names(x@submodels)
+    ll_temp <- NULL
+    for(j in 1:length(nms)){
+      temp <- x@submodels[[nms[j]]]$fitfunction$result*wgts[j]
+      if(is.null(temp)){
+        stop("The row LL has not been save, check that rowDiagnostics = TRUE")
+      }else{
+        ll_temp <- do.call(cbind, list(ll_temp, temp))
+      }
+    }
+    lls <- log(rowSums(ll_temp))
+  }
+  
+  return(lls)
+}
+
+              
