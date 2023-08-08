@@ -29,7 +29,6 @@
 #' @importFrom stats model.frame model.matrix model.response model.weights
 #' @importFrom stats weights deviance logLik
 #' @importFrom lavaan lavInspect
-#' @importFrom OpenMx mxEvalByName
 #'
 #' @export
 llcont <- function(x, ...) UseMethod("llcont")
@@ -533,12 +532,12 @@ llcont.SingleGroupClass <- function(x, ...) {
 ## Getting log-likelihood of OpenMx objects for individual cases
 ################################################################
 #' @export
-llcont.MxModel <- function(x){
+llcont.MxModel <- function(x, ...){
 
   wgts <- x$expectation$output$weights
   
   if(is.null(wgts)){
-    ls <- attr(mxEvalByName("fitfunction", x), 'likelihoods')
+    ls <- attr(OpenMx::mxEvalByName("fitfunction", x), 'likelihoods')
     if(is.null(ls)){
       stop("The row LL has not been saved, check that rowDiagnostics = TRUE")
     } else {
