@@ -29,6 +29,7 @@
 #' @importFrom stats model.frame model.matrix model.response model.weights
 #' @importFrom stats weights deviance logLik
 #' @importFrom lavaan lavInspect
+#' @importFrom OpenMx mxEvalByName
 #'
 #' @export
 llcont <- function(x, ...) UseMethod("llcont")
@@ -537,19 +538,20 @@ llcont.MxModel <- function(x){
   wgts <- x$expectation$output$weights
   
   if(is.null(wgts)){
-    ls <- attr(mxEval(fitfunction, x), 'likelihoods')
+    ls <- attr(mxEvalByName("fitfunction", x), 'likelihoods')
     if(is.null(ls)){
       stop("The row LL has not been saved, check that rowDiagnostics = TRUE")
-    }else{lls <- log(ls)}
-    
-  }else{
+    } else {
+      lls <- log(ls)
+    }
+  } else {
     nms <- names(x@submodels)
     ll_temp <- NULL
     for(j in 1:length(nms)){
       temp <- x@submodels[[nms[j]]]$fitfunction$result*wgts[j]
       if(is.null(temp)){
         stop("The row LL has not been saved, check that rowDiagnostics = TRUE")
-      }else{
+      } else {
         ll_temp <- do.call(cbind, list(ll_temp, temp))
       }
     }
