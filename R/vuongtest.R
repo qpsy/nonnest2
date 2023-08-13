@@ -371,5 +371,5 @@ check.obj <- function(object1, object2) {
 
 .onAttach <- function(...) {
   version <- read.dcf(file=system.file("DESCRIPTION", package="nonnest2"), fields="Version")
-  packageStartupMessage(paste0("This is nonnest2 ", version, ".\nCaution: nonnest2 has not been tested with all combinations of supported model classes."))
+  packageStartupMessage(paste0("This is nonnest2 ", version, ".\nnonnest2 has not been tested with all combinations of supported model classes."))
 }
