@@ -1,3 +1,10 @@
+Changes in Version 0.5-6
+    o add initial functionality for OpenMx models (credit to Mauricio Garnier-Villarreal)
+
+Changes in Versions 0.5-4 and 0.5-5
+    o fix bugs for lavaan models with missing data, where some rows of the data matrix
+      were fully missing
+
 Changes in Version 0.5-3
     o simplify llcont() for mlogit models (credit to Yves Croissant)
 
