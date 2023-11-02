@@ -124,7 +124,7 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none", ll1=llcont, ll
 
   ## Eq (4.2)
   nmis <- sum(is.na(llA)) # (missing all data)
-  n <- NROW(llA) - nmis
+  n <- length(llA) - nmis
   omega.hat.2 <- (n-1)/n * var(llA - llB, na.rm = TRUE)
 
   ## Get p-value of weighted chi-square dist

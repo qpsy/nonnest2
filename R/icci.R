@@ -75,7 +75,7 @@ icci <- function(object1, object2, conf.level=.95, ll1=llcont, ll2=llcont) {
 
   ## Eq (4.2)
   nmis <- sum(is.na(llA)) # (missing all data)
-  n <- NROW(llA) - nmis
+  n <- length(llA) - nmis
   omega.hat.2 <- (n-1)/n * var(llA - llB, na.rm = TRUE)
 
   if(classA %in% c("SingleGroupClass", "MultipleGroupClass")){
@@ -84,7 +84,7 @@ icci <- function(object1, object2, conf.level=.95, ll1=llcont, ll2=llcont) {
   } else {
     ## BIC is computed like this because hurdle, zeroinfl, mlogit
     ## don't have an nobs() method
-    bicA <- AIC(object1, k = log(NROW(estfun(object1))))
+    bicA <- AIC(object1, k = log(length(llA)))
     aicA <- AIC(object1)
   }
 
@@ -92,7 +92,7 @@ icci <- function(object1, object2, conf.level=.95, ll1=llcont, ll2=llcont) {
     bicB <- mirt::extract.mirt(object2, "BIC")
     aicB <- mirt::extract.mirt(object2, "AIC")
   } else {
-    bicB <- AIC(object2, k = log(NROW(estfun(object2))))
+    bicB <- AIC(object2, k = log(length(llB)))
     aicB <- AIC(object2)
   }
 
