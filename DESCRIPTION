@@ -23,7 +23,7 @@ Imports:
     sandwich
 License: GPL-2 | GPL-3
 Suggests: 
-    mirt (>= 1.26.3),
+    mirt (>= 1.42.1),
     OpenMx,
     tidySEM,
     AER,
