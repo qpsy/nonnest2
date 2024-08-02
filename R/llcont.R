@@ -10,8 +10,8 @@
 #' @param x a model object
 #' @param \dots arguments passed to specific methods
 #'
-#' @author Ed Merkle, Dongjun You, Lennart Schneider, and Mauricio Garnier-Villarreal
-#' 
+#' @author Ed Merkle, Dongjun You, Lennart Schneider, Mauricio Garnier-Villarreal, and Phil Chalmers
+#'
 #' @return An object of class \code{numeric} containing individuals' contributions to the log-likelihood.  The sum of these contributions equals the model log-likelihood.
 #'
 #' @examples
@@ -431,7 +431,7 @@ llcont.lavaan <- function(x, ...){
         if(inherits(tmpll.x, "try-error")) tmpll.x <- NA
         llvec[grpind] <- llvec[grpind] - tmpll.x
       }
-      
+
     } else { # incomplete data
       nsub <- ntab[g]
       M <- samplestats@missing[[g]]
@@ -440,7 +440,7 @@ llcont.lavaan <- function(x, ...){
 
       Mu.hat <- unclass(moments$mean)
       nvar <- ncol(moments$cov)
-      
+
       for(p in 1:length(M)) {
         ## Data
         case.idx <- Mp$case.idx[[p]]
@@ -489,7 +489,7 @@ llcont.lavaan <- function(x, ...){
     llvec <- llvec[!is.na(llvec)]
     if(length(llvec) != sum(unlist(lavInspect(x, 'nobs')))) warning("nonnest2 warning: problem with llcont(), likely due to missing data.")
   }
-  
+
   llvec
 }
 
@@ -527,6 +527,11 @@ llcont.SingleGroupClass <- function(x, ...) {
   return(llcont)
 }
 
+#' @export
+llcont.DiscreteClass <- function(x, ...){
+    class(x) <- "MultipleGroupClass"
+    llcont(x, ...)
+}
 
 ################################################################
 ## Getting log-likelihood of OpenMx objects for individual cases
@@ -535,7 +540,7 @@ llcont.SingleGroupClass <- function(x, ...) {
 llcont.MxModel <- function(x, ...){
 
   wgts <- x$expectation$output$weights
-  
+
   if(is.null(wgts)){
     ls <- attr(OpenMx::mxEvalByName("fitfunction", x), 'likelihoods')
     if(is.null(ls)){
@@ -556,8 +561,8 @@ llcont.MxModel <- function(x, ...){
     }
     lls <- log(rowSums(ll_temp))
   }
-  
+
   return(lls)
 }
 
-              
+
