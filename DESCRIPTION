@@ -1,13 +1,14 @@
 Package: nonnest2
 Title: Tests of Non-Nested Models
-Version: 0.5-7
-Date: 2023-11-02
+Version: 0.5-8
+Date: 2024-08-20
 Authors@R: c(person(given = "Edgar", family = "Merkle",
                     role = c("aut","cre"), email = "merklee@missouri.edu"),
              person(given = "Dongjun", family = "You", role = "aut"),
              person(given = "Lennart", family = "Schneider", role = "ctb"),
              person(given = "Mauricio", family = "Garnier-Villarreal", role = "ctb"),
-             person(given = "Seongho", family = "Bae", role = "ctb")
+             person(given = "Seongho", family = "Bae", role = "ctb"),
+             person(given = "Phil", family = "Chalmers", role = "ctb")
             )
 Description: Testing non-nested models via theory supplied by Vuong (1989) <DOI:10.2307/1912557>.
     Includes tests of model distinguishability and of model fit that can be applied
@@ -35,6 +36,7 @@ Suggests:
     knitr,
     rmarkdown,
     testthat
+URL: https://github.com/qpsy/nonnest2
 VignetteBuilder: knitr
-RoxygenNote: 7.2.3
+RoxygenNote: 7.3.2
 Encoding: UTF-8

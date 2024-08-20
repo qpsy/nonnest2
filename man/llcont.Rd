@@ -35,5 +35,5 @@ logLik(gam1)
 
 }
 \author{
-Ed Merkle, Dongjun You, Lennart Schneider, and Mauricio Garnier-Villarreal
+Ed Merkle, Dongjun You, Lennart Schneider, Mauricio Garnier-Villarreal, and Phil Chalmers
 }
