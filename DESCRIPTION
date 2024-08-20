@@ -21,7 +21,8 @@ Imports:
     CompQuadForm,
     mvtnorm,
     lavaan (>= 0.6-6),
-    sandwich
+    sandwich,
+    methods
 License: GPL-2 | GPL-3
 Suggests: 
     mirt (>= 1.42.1),

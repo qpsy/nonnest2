@@ -94,6 +94,7 @@
 #' @importFrom CompQuadForm imhof
 #' @importFrom stats coef pnorm var vcov
 #' @importMethodsFrom lavaan coef fitted logLik vcov
+#' @importFrom methods slotNames
 #' @export
 vuongtest <- function(object1, object2, nested=FALSE, adj="none", ll1=llcont, ll2=llcont, score1=NULL, score2=NULL, vc1=vcov, vc2=vcov) {
 
@@ -333,7 +334,11 @@ check.obj <- function(object1, object2) {
     } else if(classA %in% c("MxRAMModel" , "MxModel")){
       callA <- object1@name
     } else {
-      callA <- object1@call
+      if ("call" %in% slotNames(object1)) {
+        callA <- object1@call
+      } else {
+        stop("cannot find call information about object1")
+      }
     }
     if(classA == "lavaan"){
       if(length(object1@Data@weights[[1]]) > 0){
@@ -350,7 +355,11 @@ check.obj <- function(object1, object2) {
     } else if(classB %in% c("MxRAMModel" , "MxModel") ){
       callB <- object2@name
     } else {
-      callB <- object2@call
+      if ("call" %in% slotNames(object2)) {
+        callB <- object2@call
+      } else {
+        stop("cannot find call information about object2")
+      }
     }
     if(classB == "lavaan"){
       if(length(object2@Data@weights[[1]]) > 0){
