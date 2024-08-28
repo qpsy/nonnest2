@@ -1,11 +1,24 @@
+Changes in Version 0.5-8
+
+    o add support for objects of DiscreteClass from mirt package (credit to Phil Chalmers)
+
+    o bug fix and improved check for object calls
+
+Changes in Version 0.5-7
+
+    o internal change so that nonnest2 is more likely to work with new object classes
+
 Changes in Version 0.5-6
+
     o add initial functionality for OpenMx models (credit to Mauricio Garnier-Villarreal)
 
 Changes in Versions 0.5-4 and 0.5-5
+
     o fix bugs for lavaan models with missing data, where some rows of the data matrix
       were fully missing
 
 Changes in Version 0.5-3
+
     o simplify llcont() for mlogit models (credit to Yves Croissant)
 
     o fix for AIC/BIC adjustments to test statistics (credit to Thomas Hielscher)
@@ -13,6 +26,7 @@ Changes in Version 0.5-3
     o handle sampling weights for mirt models, throw error for lavaan sampling weights
 
 Changes in Version 0.5-2
+
     o new vuongtest() arguments ll1, ll2, score1, score2, vc1, vc2 for
       sending in custom functions that obtain casewise log-likelihood,
       scores, and vcovs from fitted models
@@ -20,6 +34,7 @@ Changes in Version 0.5-2
     o add packages to Suggests, fix a failing test
 
 Changes in Version 0.5-1
+
     o llcont() for lavaan objects with fixed.x=TRUE is corrected
 
 Changes in Version 0.5

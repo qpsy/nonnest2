@@ -1,7 +1,7 @@
 Package: nonnest2
 Title: Tests of Non-Nested Models
 Version: 0.5-8
-Date: 2024-08-20
+Date: 2024-08-28
 Authors@R: c(person(given = "Edgar", family = "Merkle",
                     role = c("aut","cre"), email = "merklee@missouri.edu"),
              person(given = "Dongjun", family = "You", role = "aut"),
@@ -25,7 +25,7 @@ Imports:
     methods
 License: GPL-2 | GPL-3
 Suggests: 
-    mirt (>= 1.42.1),
+    mirt (>= 1.42),
     OpenMx,
     tidySEM,
     AER,
