@@ -32,7 +32,7 @@ traceable provenance. Equation numbers refer to Vuong (1989).
 | Matrices `A`, `B` | Vuong Eq (2.1), (2.2) | `calcAB()` | `A = (n·vcov)^-1`, `B = crossprod(scores)/n` |
 | Cross-product `B_{f,g}` | Vuong Eq (2.7) | `calcBcross()` | `crossprod(sc1, sc2)/n` |
 | Matrix `W` (eigenvalues = weights `lambda`) | Vuong Eq (3.6) | `calcLambda()` | block matrix `[[-B1 A1^-1, -Bc A2^-1], [Bc' A1^-1, B2 A2^-1]]` |
-| AIC/BIC difference confidence interval | Merkle, You & Preacher (2016), Eq (7)–(8) | `icci()` | `diff ± qnorm(alpha/2, 1-alpha/2) · sqrt(n·4·omega_hat^2)` |
+| AIC/BIC difference confidence interval | Merkle, You & Preacher (2016), Eq (7)–(8) | `icci()` | `diff ± qnorm(c(alpha/2, 1-alpha/2)) · sqrt(n·4·omega_hat^2)` |
 
 ## Audit status (2026-07)
 
