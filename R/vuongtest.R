@@ -30,6 +30,7 @@
 #' @param score2 an optional function for computing scores of object 2
 #' @param vc1 an optional function for computing the asymptotic covariance matrix of the object1 parameters
 #' @param vc2 an optional function for computing the asymptotic covariance matrix of the object2 parameters
+#' @param clip clip the eigenvalues of the W matrix that is involved in the limiting distributions? Defaults to FALSE; if TRUE, extreme eigenvalues will be censored to +/-5. Can also supply a numeric value to override the 5.
 #'
 #' @author Ed Merkle and Dongjun You
 #'
@@ -96,13 +97,19 @@
 #' @importMethodsFrom lavaan coef fitted logLik vcov
 #' @importFrom methods slotNames
 #' @export
-vuongtest <- function(object1, object2, nested=FALSE, adj="none", ll1=llcont, ll2=llcont, score1=NULL, score2=NULL, vc1=vcov, vc2=vcov) {
+vuongtest <- function(object1, object2, nested=FALSE, adj="none", ll1=llcont, ll2=llcont, score1=NULL, score2=NULL, vc1=vcov, vc2=vcov, clip = FALSE) {
 
   ## check objects, issue warnings/errors, get classes/calls
   obinfo <- check.obj(object1, object2)
   callA <- obinfo$callA; classA <- obinfo$classA
   callB <- obinfo$callB; classB <- obinfo$classB
 
+  clipval <- 5
+  if(is.numeric(clip)) {
+    clipval <- abs(clip)
+    clip <- TRUE
+  }
+  
   llA <- ll1(object1)
   llB <- ll2(object2)
 
@@ -130,6 +137,10 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none", ll1=llcont, ll
 
   ## Get p-value of weighted chi-square dist
   lamstar <- calcLambda(object1, object2, n, score1, score2, vc1, vc2)
+  if(clip){
+    lamstar[lamstar < -clip] <- -clip
+    lamstar[lamstar > clip] <- clip
+  }
 
   ## Note: dr package requires non-negative weights, which
   ##       does not help when nested==TRUE
@@ -253,6 +264,8 @@ calcAB <- function(object, n, scfun, vc){
   sc.cp <- crossprod(sc)/n
   B <- matrix(sc.cp, nrow(A), nrow(A))
 
+  if(max(abs(log(eigen(A %*% chol2inv(chol(B)), only.values = TRUE)$values))) > 3) warning("The sandwich ratio yields extreme eigenvalues. Consider exploring misspecification of the candidate models, and use the clip argument to potentially obtain a more reasonable test (no guarantees!).")
+  
   list(A=A, B=B, sc=sc)
 }
 
@@ -277,8 +290,10 @@ calcLambda <- function(object1, object2, n, score1, score2, vc1, vc2) {
                    AB2$B %*% chol2inv(chol(AB2$A))))
 
   lamstar <- eigen(W, only.values=TRUE)$values
-  ## Discard imaginary part, as it only occurs for tiny eigenvalues?
-  ## using Re
+  ## Discard imaginary part, but check that the imaginary parts are tiny
+  largei <- abs(Im(lamstar)) > 1e-5
+  if (any(largei)) warning("Eigenvalues of the W matrix contain substantial imaginary parts. This may be a minor numerical issue, but it is flagged as a potential problem.")
+
   Re(lamstar)
 }
 

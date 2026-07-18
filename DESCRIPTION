@@ -1,7 +1,7 @@
 Package: nonnest2
 Title: Tests of Non-Nested Models
-Version: 0.5-9
-Date: 2026-03-31
+Version: 0.5-10
+Date: 2026-07-18
 Authors@R: c(person(given = "Edgar", family = "Merkle",
                     role = c("aut","cre"), email = "merklee@missouri.edu"),
              person(given = "Dongjun", family = "You", role = "aut"),
@@ -39,5 +39,5 @@ Suggests:
     testthat
 URL: https://github.com/qpsy/nonnest2
 VignetteBuilder: knitr
-RoxygenNote: 7.3.3
 Encoding: UTF-8
+Config/roxygen2/version: 8.0.0

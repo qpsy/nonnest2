@@ -14,7 +14,8 @@ vuongtest(
   score1 = NULL,
   score2 = NULL,
   vc1 = vcov,
-  vc2 = vcov
+  vc2 = vcov,
+  clip = FALSE
 )
 }
 \arguments{
@@ -37,6 +38,8 @@ vuongtest(
 \item{vc1}{an optional function for computing the asymptotic covariance matrix of the object1 parameters}
 
 \item{vc2}{an optional function for computing the asymptotic covariance matrix of the object2 parameters}
+
+\item{clip}{clip the eigenvalues of the W matrix that is involved in the limiting distributions? Defaults to FALSE; if TRUE, eigenvalues will be clipped to +/-5. Can also supply a numeric value to override the 5.}
 }
 \value{
 an object of class \code{vuongtest} containing test results.
