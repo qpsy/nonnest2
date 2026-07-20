@@ -138,8 +138,8 @@ vuongtest <- function(object1, object2, nested=FALSE, adj="none", ll1=llcont, ll
   ## Get p-value of weighted chi-square dist
   lamstar <- calcLambda(object1, object2, n, score1, score2, vc1, vc2)
   if(clip){
-    lamstar[lamstar < -clip] <- -clip
-    lamstar[lamstar > clip] <- clip
+    lamstar[lamstar < -clipval] <- -clipval
+    lamstar[lamstar > clipval] <- clipval
   }
 
   ## Note: dr package requires non-negative weights, which
