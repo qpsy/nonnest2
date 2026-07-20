@@ -264,8 +264,6 @@ calcAB <- function(object, n, scfun, vc){
   sc.cp <- crossprod(sc)/n
   B <- matrix(sc.cp, nrow(A), nrow(A))
 
-  if(max(abs(log(eigen(A %*% chol2inv(chol(B)), only.values = TRUE)$values))) > 3) warning("The sandwich ratio yields extreme eigenvalues. Consider exploring misspecification of the candidate models, and use the clip argument to potentially obtain a more reasonable test (no guarantees!).")
-  
   list(A=A, B=B, sc=sc)
 }
 
@@ -284,6 +282,10 @@ calcLambda <- function(object1, object2, n, score1, score2, vc1, vc2) {
   AB2 <- calcAB(object2, n, score2, vc2)
   Bc <- calcBcross(AB1$sc, AB2$sc, n)
 
+  exteigen1 <- with(AB1, max(abs(log(eigen(A %*% chol2inv(chol(B)), only.values = TRUE)$values))) > 3)
+  exteigen2 <- with(AB2, max(abs(log(eigen(A %*% chol2inv(chol(B)), only.values = TRUE)$values))) > 3)
+  if(exteigen1 || exteigen2) warning("The sandwich ratios yield extreme eigenvalues. Consider exploring misspecification of the candidate models, and use the clip argument to potentially obtain a more reasonable test (no guarantees!).\n  The problematic model(s) are ", paste(c("object1", "object2")[c(exteigen1, exteigen2)], collapse = " "))
+  
   W <- cbind(rbind(-AB1$B %*% chol2inv(chol(AB1$A)),
                    t(Bc) %*% chol2inv(chol(AB1$A))),
              rbind(-Bc %*% chol2inv(chol(AB2$A)),
